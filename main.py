@@ -207,9 +207,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         
         if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
-            cur.execute("SELECT * FROM members_list GROUP by id")
+            cur.execute("SELECT * FROM members_list ORDER BY dept")
         else: 
-            cur.execute("SELECT * FROM members_list WHERE dept='%s' GROUP by id" % self.comboBox_viewtabledept.currentText())
+            cur.execute("SELECT * FROM members_list WHERE dept='%s' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
         
         memberlist = cur.fetchall()
         self.tableWidget.setRowCount(len(memberlist))
@@ -322,19 +322,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             contact_num = self.tableWidget.item(row, 9).text()
             idnum = int(self.tableWidget.item(row, 0).text())
             
-            # write null to mysql if rfid is empty
-#             if rfid_num == "":
-#                 cur.execute("UPDATE members_list SET rfid_num=NULL, chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', dob='%s', passing_date='%s', contact_num='%s' WHERE id=%d " 
-#             % (chi_name,eng_name,dept,gender,status,dob,passing_date,contact_num,idnum))
-#                         
-#             else: 
-#                 cur.execute("UPDATE members_list SET rfid_num='%s', chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', dob='%s', passing_date='%s', contact_num='%s' WHERE id=%d " 
-#             % (rfid_num,chi_name,eng_name,dept,gender,status,dob,passing_date,contact_num,idnum))
+
 
             if rfid_num == "":
                 cur.execute("UPDATE members_list SET rfid_num=NULL")
             else:
-                cur.execute("UPDATE members_list SET rfid_num='%s'" % rfid_num)
+                
+                cur.execute("UPDATE members_list SET rfid_num=NULL WHERE id=%d" % (idnum))
+                db.commit()
+                cur.execute("UPDATE members_list SET rfid_num='%s' WHERE id=%d" % (rfid_num, idnum))
+                
             
             cur.execute("UPDATE members_list SET chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', contact_num='%s' WHERE id=%d " 
             % (chi_name,eng_name,dept,gender,membership_status,contact_num,idnum))
@@ -344,7 +341,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusbar.showMessage("Changes committed!")
             
             
-#             print self.tableWidget.item(row, 1).text().toUtf8(), self.tableWidget.item(row, 2).text().toUtf8()
 
 
         
