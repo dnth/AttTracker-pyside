@@ -388,7 +388,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_admintab_name.clear()
         self.comboBox_admintab_status.clear()
         
-        cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' " % self.comboBox_admintab_dept.currentText())
+        cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
         namelist = cur.fetchall()
         for name in namelist:
             self.comboBox_admintab_name.addItems(name)
@@ -415,7 +415,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()        
         self.comboBox_profilename.clear()
-        cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' " % self.comboBox_profiledept.currentText())
+        cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_profiledept.currentText())
         namelist = cur.fetchall()
         for name in namelist:
             self.comboBox_profilename.addItems(name)
@@ -883,7 +883,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         '''
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
-        cur.execute("SELECT * FROM members_list WHERE rfid_num='%s' " % rfid)
+        cur.execute("SELECT * FROM members_list WHERE rfid_num='%s' AND membership_status='Active' " % rfid)
         mysql_data = cur.fetchall()
         return mysql_data
     
