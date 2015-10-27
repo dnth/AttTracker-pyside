@@ -17,6 +17,8 @@ import datetime
 from datetime import date, time
 from time import strftime
 
+print sys.getfilesystemencoding()
+
 class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     def __init__(self):
         # Explaining super is out of the scope of this article
@@ -915,7 +917,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 print "Success"
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
+
                 print "Name: %s" % member_data[0][2]
+                
                 self.label_dynamic_name.setText(member_data[0][2])
                 
                 if member_data[0][1] is not None:
@@ -962,6 +966,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 print "Sorry no match in database!"
                 self.label_dynamic_status.setText("Sorry no match in database! Please get help from LWC admin")
                 self.label_dynamic_status.setStyleSheet("color: blue")
+                self.label_picture.clear()
+                self.label_dynamic_name.clear()
+                self.label_dynamic_dept.clear()
+                self.label_dynamic_rfid.clear()
+                self.label_dynamic_engname.clear()
+                
         
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
