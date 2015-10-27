@@ -17,7 +17,26 @@ import datetime
 from datetime import date, time
 from time import strftime
 
-print sys.getfilesystemencoding()
+class Login(QtGui.QDialog):
+    def __init__(self):
+        QtGui.QDialog.__init__(self)
+        self.textName = QtGui.QLineEdit(self)
+        self.textPass = QtGui.QLineEdit(self)
+        self.buttonLogin = QtGui.QPushButton('Login', self)
+        self.buttonLogin.clicked.connect(self.handleLogin)
+        layout = QtGui.QVBoxLayout(self)
+        layout.addWidget(self.textName)
+        layout.addWidget(self.textPass)
+        layout.addWidget(self.buttonLogin)
+
+    def handleLogin(self):
+        if (self.textName.text() == 'foo' and
+            self.textPass.text() == 'bar'):
+            self.accept()
+        else:
+            QtGui.QMessageBox.warning(
+                self, 'Error', 'Bad user or password')
+            
 
 class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     def __init__(self):
@@ -95,6 +114,17 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # personal profile stuff
         self.comboBox_profiledept.currentIndexChanged.connect(self.load_profile_namecombobox)
         self.comboBox_profilename.currentIndexChanged.connect(self.load_profile)
+        
+        
+
+#         self.tab_widget_overall.connect(self.tab_widget_overall, QtCore.SIGNAL("currentChanged(int)"), self.tabSelected)
+#     def tabSelected(self, arg=None):
+#         print '\n\t tabSelected() current Tab index =', arg
+#         if arg==3:
+#             print "Password prmot"
+#             
+#             if Login().exec_() == QtGui.QDialog.Accepted:
+#                 self.home()
          
     def close_application(self):
         print "Thanks for using me!"
@@ -325,9 +355,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 
 
             if rfid_num == "":
-                cur.execute("UPDATE members_list SET rfid_num=NULL")
+                cur.execute("UPDATE members_list SET rfid_num=NULL WHERE id=%d" % (idnum))
             else:
-                
                 cur.execute("UPDATE members_list SET rfid_num=NULL WHERE id=%d" % (idnum))
                 db.commit()
                 cur.execute("UPDATE members_list SET rfid_num='%s' WHERE id=%d" % (rfid_num, idnum))
@@ -971,6 +1000,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
 def main():
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+    
     form = AttTracker()                 # We set the form to be our ExampleApp (design)
     form.show()                         # Show the form
     app.exec_()                         # and execute the app
