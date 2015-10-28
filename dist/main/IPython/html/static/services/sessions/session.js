@@ -121,7 +121,6 @@ define([
             cache: false,
             type: "POST",
             data: JSON.stringify(this._get_model()),
-            contentType: 'application/json',
             dataType: "json",
             success: this._on_success(on_success),
             error: this._on_error(on_error)
@@ -169,7 +168,6 @@ define([
             cache: false,
             type: "PATCH",
             data: JSON.stringify(this._get_model()),
-            contentType: 'application/json',
             dataType: "json",
             success: this._on_success(success),
             error: this._on_error(error)

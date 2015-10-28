@@ -73,7 +73,7 @@ define([
         if (!NotebookList._bound_singletons) {
             NotebookList._bound_singletons = true;
             $('#new-file').click(function(e) {
-                var w = window.open('', IPython._target);
+                var w = window.open(undefined, IPython._target);
                 that.contents.new_untitled(that.notebook_path || '', {type: 'file', ext: '.txt'}).then(function(data) {
                     var url = utils.url_join_encode(
                         that.base_url, 'edit', data.path
@@ -92,7 +92,6 @@ define([
                             OK: {'class': 'btn-primary'}
                         }
                     });
-                    console.warn('Error durring New file creation', e);
                 });
                 that.load_sessions();
             });
@@ -112,7 +111,6 @@ define([
                             OK: {'class': 'btn-primary'}
                         }
                     });
-                    console.warn('Error durring New directory creation', e);
                 });
                 that.load_sessions();
             });
@@ -124,27 +122,12 @@ define([
             $('.delete-button').click($.proxy(this.delete_selected, this));
 
             // Bind events for selection menu buttons.
-            $('#selector-menu').click(function (event) {
-                that.select($(event.target).attr('id'));
-            });
-            var select_all = $('#select-all');
-            select_all.change(function () {
-                if (!select_all.prop('checked') || select_all.data('indeterminate')) {
-                    that.select('select-none');
-                } else {
-                    that.select('select-all');
-                }
-            });
-            $('#button-select-all').click(function (e) {
-                // toggle checkbox if the click doesn't come from the checkbox already
-                if (!$(e.target).is('input[type=checkbox]')) {
-                    if (select_all.prop('checked') || select_all.data('indeterminate')) {
-                        that.select('select-none');
-                    } else {
-                        that.select('select-all');
-                    }
-                }
-            });
+            $('#tree-selector .select-all').click($.proxy(this.select_all, this));
+            $('#tree-selector .select-notebooks').click($.proxy(this.select_notebooks, this));
+            $('#tree-selector .select-running-notebooks').click($.proxy(this.select_running_notebooks, this));
+            $('#tree-selector .select-files').click($.proxy(this.select_files, this));
+            $('#tree-selector .select-directories').click($.proxy(this.select_directories, this));
+            $('#tree-selector .deselect-all').click($.proxy(this.deselect_all, this));
         }
     };
 
@@ -394,21 +377,74 @@ define([
     };
 
     /**
-     * Select all items in the tree of specified type.
-     * selection_type : string among "select-all", "select-folders", "select-notebooks", "select-running-notebooks", "select-files"
-     *                  any other string (like "select-none") deselects all items
+     * Select all of the items in the tree.
      */
-    NotebookList.prototype.select = function(selection_type) {
+    NotebookList.prototype.select_all = function() {
+        $('.list_item input[type=checkbox]').each(function(index, item) {
+            $(item).prop('checked', true);
+        });
+        this._selection_changed();
+    };
+
+    /**
+     * Select all of the notebooks in the tree.
+     */
+    NotebookList.prototype.select_notebooks = function() {
+        this.deselect_all();
+        $('.list_item').each(function(index, item) {
+            if ($(item).data('type') === 'notebook') {
+                $(item).find('input[type=checkbox]').prop('checked', true);
+            }
+        });
+        this._selection_changed();
+    };
+
+    /**
+     * Select all of the running notebooks in the tree.
+     */
+    NotebookList.prototype.select_running_notebooks = function() {
+        this.deselect_all();
         var that = this;
         $('.list_item').each(function(index, item) {
-            var item_type = $(item).data('type');
-            var state = false;
-            state = state || (selection_type === "select-all");
-            state = state || (selection_type === "select-folders" && item_type === 'directory');
-            state = state || (selection_type === "select-notebooks" && item_type === 'notebook');
-            state = state || (selection_type === "select-running-notebooks" && item_type === 'notebook' && that.sessions[$(item).data('path')] !== undefined);
-            state = state || (selection_type === "select-files" && item_type === 'file');
-            $(item).find('input[type=checkbox]').prop('checked', state);
+            if ($(item).data('type') === 'notebook' && that.sessions[$(item).data('path')] !== undefined) {
+                $(item).find('input[type=checkbox]').prop('checked', true);
+            }
+        });
+        this._selection_changed();
+    };
+
+    /**
+     * Select all of the files in the tree.
+     */
+    NotebookList.prototype.select_files = function() {
+        this.deselect_all();
+        $('.list_item').each(function(index, item) {
+            if ($(item).data('type') === 'file') {
+                $(item).find('input[type=checkbox]').prop('checked', true);
+            }
+        });
+        this._selection_changed();
+    };
+
+    /**
+     * Select all of the directories in the tree.
+     */
+    NotebookList.prototype.select_directories = function() {
+        this.deselect_all();
+        $('.list_item').each(function(index, item) {
+            if ($(item).data('type') === 'directory') {
+                $(item).find('input[type=checkbox]').prop('checked', true);
+            }
+        });
+        this._selection_changed();
+    };
+
+    /**
+     * Unselect everything selected in the tree.
+     */
+    NotebookList.prototype.deselect_all = function() {
+        $('.list_item input[type=checkbox]').each(function(index, item) {
+            $(item).prop('checked', false);
         });
         this._selection_changed();
     };
@@ -430,10 +466,9 @@ define([
         $('.list_item :checked').each(function(index, item) {
             var parent = $(item).parent().parent();
 
-            // If the item doesn't have an upload button, isn't the 
-            // breadcrumbs and isn't the parent folder '..', then it can be selected.  
-            // Breadcrumbs path == ''.
-            if (parent.find('.upload_button').length === 0 && parent.data('path') !== '' && parent.data('path') !== utils.url_path_split(that.notebook_path)[0]) {
+            // If the item doesn't have an upload button and it's not the 
+            // breadcrumbs, it can be selected.  Breadcrumbs path == ''.
+            if (parent.find('.upload_button').length === 0 && parent.data('path') !== '') {
                 checked++;
                 selected.push({
                     name: parent.data('name'), 
@@ -451,8 +486,8 @@ define([
         });
         this.selected = selected;
 
-        // Rename is only visible when one item is selected, and it is not a running notebook
-        if (selected.length==1 && !has_running_notebook) {
+        // Rename is only visible when one item is selected.
+        if (selected.length==1) {
             $('.rename-button').css('display', 'inline-block');
         } else {
             $('.rename-button').css('display', 'none');
@@ -488,33 +523,19 @@ define([
             var parent = $(item).parent().parent();
             // If the item doesn't have an upload button and it's not the 
             // breadcrumbs, it can be selected.  Breadcrumbs path == ''.
-            if (parent.find('.upload_button').length === 0 && parent.data('path') !== '' && parent.data('path') !== utils.url_path_split(that.notebook_path)[0]) {
+            if (parent.find('.upload_button').length === 0 && parent.data('path') !== '') {
                 total++;
             }
         });
-
-        var select_all = $("#select-all");
         if (checked === 0) {
-            select_all.prop('checked', false);
-            select_all.prop('indeterminate', false);
-            select_all.data('indeterminate', false);
+            $('#tree-selector input[type=checkbox]')[0].indeterminate = false;
+            $('#tree-selector input[type=checkbox]').prop('checked', false);
         } else if (checked === total) {
-            select_all.prop('checked', true);
-            select_all.prop('indeterminate', false);
-            select_all.data('indeterminate', false);
+            $('#tree-selector input[type=checkbox]')[0].indeterminate = false;
+            $('#tree-selector input[type=checkbox]').prop('checked', true);
         } else {
-            select_all.prop('checked', false);
-            select_all.prop('indeterminate', true);
-            select_all.data('indeterminate', true);
-        }
-        // Update total counter
-        $('#counter-select-all').html(checked===0 ? '&nbsp;' : checked);
-
-        // If at aleast on item is selected, hide the selection instructions.
-        if (checked > 0) {
-            $('.dynamic-instructions').hide();
-        } else {
-            $('.dynamic-instructions').show();
+            $('#tree-selector input[type=checkbox]').prop('checked', false);
+            $('#tree-selector input[type=checkbox]')[0].indeterminate = true;
         }
     };
 
@@ -611,31 +632,29 @@ define([
         if (this.selected.length != 1) return;
 
         var that = this;
-        var item_path = this.selected[0].path;
-        var item_name = this.selected[0].name;
-        var item_type = this.selected[0].type;
+        var path = this.selected[0].path;
         var input = $('<input/>').attr('type','text').attr('size','25').addClass('form-control')
-            .val(item_name);
+            .val(path);
         var dialog_body = $('<div/>').append(
             $("<p/>").addClass("rename-message")
-                .text('Enter a new '+ item_type + ' name:')
+                .text('Enter a new directory name:')
         ).append(
             $("<br/>")
         ).append(input);
         var d = dialog.modal({
-            title : "Rename "+ item_type,
+            title : "Rename directory",
             body : dialog_body,
             buttons : {
                 OK : {
                     class: "btn-primary",
                     click: function() {
-                        that.contents.rename(item_path, utils.url_path_join(that.notebook_path, input.val())).then(function() {
+                        that.contents.rename(path, input.val()).then(function() {
                             that.load_list();
                         }).catch(function(e) { 
                             dialog.modal({
                                 title: "Rename Failed",
                                 body: $('<div/>')
-                                    .text("An error occurred while renaming \"" + item_name + "\" to \"" + input.val() + "\".")
+                                    .text("An error occurred while renaming \"" + path + "\" to \"" + input.val() + "\".")
                                     .append($('<div/>')
                                         .addClass('alert alert-danger')
                                         .text(e.message || e)),
@@ -643,7 +662,6 @@ define([
                                     OK: {'class': 'btn-primary'}
                                 }
                             });
-                            console.warn('Error durring renaming :', e);
                         });
                     }
                 },
@@ -697,7 +715,6 @@ define([
                                         OK: {'class': 'btn-primary'}
                                     }
                                 });
-                                console.warn('Error durring content deletion:', e);
                             });
                         });
                     }
@@ -716,7 +733,7 @@ define([
         }
         var that = this;
         dialog.modal({
-            title : "Duplicate",
+            title : "Delete",
             body : message,
             buttons : {
                 Duplicate : {
@@ -727,9 +744,9 @@ define([
                                 that.load_list();
                             }).catch(function(e) { 
                                 dialog.modal({
-                                    title: "Duplicate Failed",
+                                    title: "Delete Failed",
                                     body: $('<div/>')
-                                        .text("An error occurred while duplicating \"" + item.path + "\".")
+                                        .text("An error occurred while deleting \"" + item.path + "\".")
                                         .append($('<div/>')
                                             .addClass('alert alert-danger')
                                             .text(e.message || e)),
@@ -737,7 +754,6 @@ define([
                                         OK: {'class': 'btn-primary'}
                                     }
                                 });
-                                console.warn('Error durring content duplication', e);
                             });
                         });
                     }
@@ -812,7 +828,6 @@ define([
                                 }
                             }}
                         });
-                        console.warn('Error durring notebook uploading', e);
                         return false;
                     }
                     content_type = 'application/json';

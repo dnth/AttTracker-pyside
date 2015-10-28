@@ -56,6 +56,7 @@ define([
         // superclass default overwrite our default
         
         this.placeholder = config.placeholder || '';
+        this.read_only = config.cm_config.readOnly;
         this.selected = false;
         this.rendered = false;
         this.mode = 'command';
@@ -73,25 +74,9 @@ define([
             }
         });
 
-        // backward compat.
-        Object.defineProperty(this, 'cm_config', {
-            get: function() {
-                return that._options.cm_config;
-            },
-            set: function(value) {
-                that._options.cm_config = value;
-            }
-        });
-
         // load this from metadata later ?
         this.user_highlight = 'auto';
-
-
-        var _local_cm_config = {};
-        if(this.class_config){
-            _local_cm_config = this.class_config.get_sync('cm_config');
-        }
-        config.cm_config = utils.mergeopt({}, config.cm_config, _local_cm_config);
+        this.cm_config = config.cm_config;
         this.cell_id = utils.uuid();
         this._options = config;
 
@@ -390,12 +375,6 @@ define([
             return false;
         }
     };
-
-    Cell.prototype.ensure_focused = function() {
-        if(this.element !== document.activeElement && !this.code_mirror.hasFocus()){
-            this.focus_cell();
-        }
-    }
     
     /**
      * Focus the cell in the DOM sense
@@ -587,17 +566,8 @@ define([
             var regs = modes[mode].reg;
             // only one key every time but regexp can't be keys...
             for(var i=0; i<regs.length; i++) {
-                // here we handle non magic_modes.
-                // TODO :
-                // On 3.0 and below, these things were regex.
-                // But now should be string for json-able config. 
-                // We should get rid of assuming they might be already 
-                // in a later version of IPython. 
-                var re = regs[i];
-                if(typeof(re) === 'string'){
-                    re = new RegExp(re) 
-                }
-                if(first_line.match(re) !== null) {
+                // here we handle non magic_modes
+                if(first_line.match(regs[i]) !== null) {
                     if(current_mode == mode){
                         return;
                     }

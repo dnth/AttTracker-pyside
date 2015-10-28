@@ -13,7 +13,7 @@ def calc_num_all_dept(verbose=False, dbhostip="127.0.0.1"):
     '''
     db = mdb.connect(charset='utf8', host=dbhostip, user="root", passwd="root", db="lwc_members")
     cur = db.cursor()
-    cur.execute("SELECT * FROM members_list")
+    cur.execute("SELECT * FROM members_list WHERE membership_status='Active'")
     CL_count = 0
     BF_count = 0
     JS_count = 0
@@ -121,7 +121,7 @@ def calc_att_by_category(month, year, event_type, dbhostip="127.0.0.1"):
     if data == ():
         cur.execute("SELECT COUNT(*) FROM event_test WHERE event_type='%s' " % event_type)
         num_events = cur.fetchall()[0]
-        cur.execute("SELECT COUNT(*) FROM members_list")
+        cur.execute("SELECT COUNT(*) FROM members_list WHERE membership_status='Active'")
         num_members = cur.fetchall()[0]
         
         total_days_counted = (num_members[0]*num_events[0])
@@ -152,7 +152,7 @@ def calc_att_by_category(month, year, event_type, dbhostip="127.0.0.1"):
     
     cur.execute("SELECT COUNT(*) FROM event_test WHERE event_type='%s' AND MONTH(event_date)='%s' AND YEAR(event_date)='%s' " % (event_type, month, year) )
     num_events = cur.fetchall()[0]
-    cur.execute("SELECT COUNT(*) FROM members_list")
+    cur.execute("SELECT COUNT(*) FROM members_list WHERE membership_status='Active'")
     num_members = cur.fetchall()[0]
     
     # total days counted is num of members * num of events
@@ -202,7 +202,7 @@ def calc_att_by_category_alldept(month, year, event_type, dbhostip="127.0.0.1"):
         if data == ():
             cur.execute("SELECT COUNT(*) FROM event_test WHERE event_type='%s' " % event_type)
             num_events = cur.fetchall()[0]
-            cur.execute("SELECT COUNT(*) FROM members_list WHERE dept='%s'" % dept)
+            cur.execute("SELECT COUNT(*) FROM members_list WHERE dept='%s' AND membership_status='Active'" % dept)
             num_members = cur.fetchall()[0]
             total_days_counted = (num_members[0]*num_events[0])
             present_count=0
@@ -232,7 +232,7 @@ def calc_att_by_category_alldept(month, year, event_type, dbhostip="127.0.0.1"):
         
         cur.execute("SELECT COUNT(*) FROM event_test WHERE event_type='%s' AND MONTH(event_date)='%s' AND YEAR(event_date)='%s' " % (event_type, month, year) )
         num_events = cur.fetchall()[0]
-        cur.execute("SELECT COUNT(*) FROM members_list WHERE dept='%s'" % dept)
+        cur.execute("SELECT COUNT(*) FROM members_list WHERE dept='%s' AND membership_status='Active'" % dept)
         num_members = cur.fetchall()[0]
         
         # total days counted is num of members * num of events

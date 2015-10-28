@@ -73,8 +73,8 @@ CFLAGS=		$(BASECFLAGS) -g -O2 $(OPT) $(EXTRA_CFLAGS)
 # Both CPPFLAGS and LDFLAGS need to contain the shell's value for setup.py to
 # be able to build extension modules using the directories specified in the
 # environment variables
-CPPFLAGS=	-I. -IInclude -I$(srcdir)/Include -I/home/camaro/anaconda/include
-LDFLAGS=	-L/home/camaro/anaconda/lib -Wl,-rpath=/home/camaro/anaconda/lib,--no-as-needed
+CPPFLAGS=	-I. -IInclude -I$(srcdir)/Include -I/home/camaro-workstation/anaconda/include
+LDFLAGS=	-L/home/camaro-workstation/anaconda/lib -Wl,-rpath=/home/camaro-workstation/anaconda/lib,--no-as-needed
 LDLAST=		
 SGI_ABI=	
 CCSHARED=	-fPIC
@@ -93,7 +93,7 @@ MACHDEP=	linux2
 MULTIARCH=	
 
 # Install prefix for architecture-independent files
-prefix=		/home/camaro/anaconda
+prefix=		/home/camaro-workstation/anaconda
 
 # Install prefix for architecture-dependent files
 exec_prefix=	${prefix}
@@ -155,7 +155,7 @@ EXEMODE=	755
 FILEMODE=	644
 
 # configure script arguments
-CONFIG_ARGS=	 '--enable-shared' '--enable-ipv6' '--enable-unicode=ucs4' '--prefix=/home/camaro/anaconda' '--with-tcltk-includes=-I/home/camaro/anaconda/include' '--with-tcltk-libs=-L/home/camaro/anaconda/lib -ltcl8.5 -ltk8.5' 'CPPFLAGS=-I/home/camaro/anaconda/include' 'LDFLAGS=-L/home/camaro/anaconda/lib -Wl,-rpath=/home/camaro/anaconda/lib,--no-as-needed' 'CC=gcc' 'PKG_CONFIG_PATH=/home/camaro/anaconda/lib/pkgconfig'
+CONFIG_ARGS=	 '--enable-shared' '--enable-ipv6' '--enable-unicode=ucs4' '--prefix=/home/camaro-workstation/anaconda' '--with-tcltk-includes=-I/home/camaro-workstation/anaconda/include' '--with-tcltk-libs=-L/home/camaro-workstation/anaconda/lib -ltcl8.5 -ltk8.5' 'CPPFLAGS=-I/home/camaro-workstation/anaconda/include' 'LDFLAGS=-L/home/camaro-workstation/anaconda/lib -Wl,-rpath=/home/camaro-workstation/anaconda/lib,--no-as-needed' 'CC=gcc' 'PKG_CONFIG_PATH=/home/camaro-workstation/anaconda/lib/pkgconfig'
 
 
 # Subdirectories with code
@@ -201,8 +201,8 @@ _PYTHON_HOST_PLATFORM=
 HOST_GNU_TYPE=  x86_64-unknown-linux-gnu
 
 # Tcl and Tk config info from --with-tcltk-includes and -libs options
-TCLTK_INCLUDES=	-I/home/camaro/anaconda/include
-TCLTK_LIBS=	-L/home/camaro/anaconda/lib -ltcl8.5 -ltk8.5
+TCLTK_INCLUDES=	-I/home/camaro-workstation/anaconda/include
+TCLTK_LIBS=	-L/home/camaro-workstation/anaconda/lib -ltcl8.5 -ltk8.5
 
 # The task to run while instrument when building the profile-opt target
 PROFILE_TASK=	$(srcdir)/Tools/pybench/pybench.py -n 2 --with-gc --with-syscheck

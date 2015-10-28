@@ -30,7 +30,7 @@ define([
         return msg;
     };
     
-    var _deserialize_binary = function(data) {
+    var _deserialize_binary = function(data, callback) {
         /**
          * deserialize the binary message format
          * callback will be called with a message whose buffers attribute
@@ -39,31 +39,28 @@ define([
         if (data instanceof Blob) {
             // data is Blob, have to deserialize from ArrayBuffer in reader callback
             var reader = new FileReader();
-            var promise = new Promise(function(resolve, reject) {
-                reader.onload = function () {
-                    var msg = _deserialize_array_buffer(this.result);
-                    resolve(msg);
-                };
-            });
+            reader.onload = function () {
+                var msg = _deserialize_array_buffer(this.result);
+                callback(msg);
+            };
             reader.readAsArrayBuffer(data);
-            return promise;
         } else {
             // data is ArrayBuffer, can deserialize directly
             var msg = _deserialize_array_buffer(data);
-            return msg;
+            callback(msg);
         }
     };
 
-    var deserialize = function (data) {
+    var deserialize = function (data, callback) {
         /**
-         * deserialize a message and return a promise for the unpacked message
+         * deserialize a message and pass the unpacked message object to callback
          */
         if (typeof data === "string") {
             // text JSON message
-            return Promise.resolve(JSON.parse(data));
+            callback(JSON.parse(data));
         } else {
             // binary message
-            return Promise.resolve(_deserialize_binary(data));
+            _deserialize_binary(data, callback);
         }
     };
     

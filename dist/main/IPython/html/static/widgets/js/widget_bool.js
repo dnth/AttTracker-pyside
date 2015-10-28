@@ -59,9 +59,10 @@ define([
             this.$checkbox.prop('checked', this.model.get('value'));
 
             if (options === undefined || options.updated_view != this) {
-                this.$checkbox.prop("disabled", this.model.get("disabled"));
+                var disabled = this.model.get('disabled');
+                this.$checkbox.prop('disabled', disabled);
 
-                var description = this.model.get("description");
+                var description = this.model.get('description');
                 if (description.trim().length === 0) {
                     this.$label.hide();
                 } else {
@@ -112,7 +113,7 @@ define([
             /**
              * Update the contents of this view
              *
-             * Called when the model is changed. The model may have been 
+             * Called when the model is changed.  The model may have been 
              * changed by another view or by a state update from the back-end.
              */
             if (this.model.get('value')) {
@@ -122,16 +123,16 @@ define([
             }
 
             if (options === undefined || options.updated_view != this) {
-                this.$el.prop("disabled", this.model.get("disabled"));
-                this.$el.attr("title", this.model.get("tooltip"));
 
-                var description = this.model.get("description");
-                var icon = this.model.get("icon");
-                if (description.trim().length === 0 && icon.trim().length ===0) {
+                var disabled = this.model.get('disabled');
+                this.$el.prop('disabled', disabled);
+
+                var description = this.model.get('description');
+                this.$el.attr("title", this.model.get("tooltip"));
+                if (description.trim().length === 0) {
                     this.$el.html("&nbsp;"); // Preserve button height
                 } else {
                     this.$el.text(description);
-                    $('<i class="fa"></i>').prependTo(this.$el).addClass(icon);
                 }
             }
             return ToggleButtonView.__super__.update.apply(this);
