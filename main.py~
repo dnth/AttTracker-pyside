@@ -744,7 +744,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_weddayservicedeptstats.canvas.draw() 
         
         self.mpl_wednesdayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service")
         daily_present_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_wednesdayservice_daily.canvas.ax.grid(True)
@@ -885,7 +885,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_memberscount.canvas.ax.set_xticklabels(members_count.keys())
         self.mpl_memberscount.canvas.ax.set_xlabel("Department")
         self.mpl_memberscount.canvas.ax.set_ylabel("Number of members")
-        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution")
+        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution, Total members:%s"%(members_count))
         self.mpl_memberscount.canvas.ax.grid(True)
         # label values on graph
         for rect in rects:

@@ -154,7 +154,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusBar().showMessage("Connected to %s" % str(self.comboBox_serialPort.currentText()))
             self.pushButton_disconnect.setEnabled(True)
             
-            self.connectDB()
+#             self.connectDB()
             
             
     def add_new_member(self):
@@ -657,7 +657,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
     def plot_sunday_service(self):
         # Sunday service
-        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service")
+        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
         self.mpl_sundayservicestats.canvas.ax.clear()
         self.mpl_sundayservicestats.canvas.ax.pie([present, broadcast, absent], labels=["Present", "Broadcast", "Absent"],autopct='%1.1f%%',
              colors = ['green', 'yellow', 'red'], startangle=180)    
@@ -668,7 +668,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_sundayservicestats.canvas.draw()
     
         # function returns dict of present, broadcast and absent according to dept
-        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service")
+        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
         self.mpl_sundayservicedeptstats.canvas.ax.clear()
         present_rects = self.mpl_sundayservicedeptstats.canvas.ax.barh(range(len(d_present)), d_present.values(), align='center', color="g", label="Present")
         broadcast_rects = self.mpl_sundayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
@@ -690,7 +690,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_sundayservicedeptstats.canvas.draw()
         
         self.mpl_sundayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_sundayservice_daily.canvas.ax.grid(True)
@@ -711,7 +711,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_sundayservice_daily.canvas.draw()
              
     def plot_wednesday_service(self): 
-        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service")
+        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
 
         self.mpl_weddayservicestats.canvas.ax.clear()
         self.mpl_weddayservicestats.canvas.ax.pie([present, broadcast, absent], labels=["Present", "Broadcast", "Absent"],autopct='%1.1f%%',
@@ -722,7 +722,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_weddayservicestats.canvas.ax.set_title("Attendance Distribution %s, %d" % (calendar.month_abbr[int(self.comboBox_monthselector.currentText())], int(self.comboBox_yearselector.currentText())), y=1.05)
         self.mpl_weddayservicestats.canvas.draw()
     
-        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service")
+        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
         self.mpl_weddayservicedeptstats.canvas.ax.clear()
         present_rects = self.mpl_weddayservicedeptstats.canvas.ax.barh(range(len(d_present)), d_present.values(), align='center', color="g", label="Present")
         broadcast_rects = self.mpl_weddayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
@@ -744,7 +744,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_weddayservicedeptstats.canvas.draw() 
         
         self.mpl_wednesdayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_wednesdayservice_daily.canvas.ax.grid(True)
@@ -765,7 +765,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_wednesdayservice_daily.canvas.draw()
     
     def plot_friday_prayer(self):
-        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting")
+        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
         
         self.mpl_fridayservicestats.canvas.ax.clear()
         self.mpl_fridayservicestats.canvas.ax.pie([present, broadcast, absent], labels=["Present", "Broadcast", "Absent"],autopct='%1.1f%%',
@@ -776,7 +776,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_fridayservicestats.canvas.ax.set_title("Attendance Distribution %s, %d" % (calendar.month_abbr[int(self.comboBox_monthselector.currentText())], int(self.comboBox_yearselector.currentText())), y=1.05)
         self.mpl_fridayservicestats.canvas.draw()
     
-        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting")
+        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
         self.mpl_fridayservicedeptstats.canvas.ax.clear()
         present_rects = self.mpl_fridayservicedeptstats.canvas.ax.barh(range(len(d_present)), d_present.values(), align='center', color="g", label="Present")
         broadcast_rects = self.mpl_fridayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
@@ -798,7 +798,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_fridayservicedeptstats.canvas.draw()
         
         self.mpl_fridayprayer_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_fridayprayer_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_fridayprayer_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_fridayprayer_daily.canvas.ax.grid(True)
@@ -819,7 +819,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_fridayprayer_daily.canvas.draw()
     
     def plot_dawn_service(self):   
-        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service")
+        present, broadcast, absent = calc_att_by_category(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
         
         self.mpl_dawnservicestats.canvas.ax.clear()
         self.mpl_dawnservicestats.canvas.ax.pie([present, broadcast, absent], labels=["Present", "Broadcast", "Absent"],autopct='%1.1f%%',
@@ -830,7 +830,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_dawnservicestats.canvas.ax.set_title("Attendance Distribution %s, %d" % (calendar.month_abbr[int(self.comboBox_monthselector.currentText())], int(self.comboBox_yearselector.currentText())), y=1.05)
         self.mpl_dawnservicestats.canvas.draw()
         
-        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service")
+        d_present, d_broadcast, d_absent = calc_att_by_category_alldept(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
         self.mpl_dawnservicedeptstats.canvas.ax.clear()
         present_rects = self.mpl_dawnservicedeptstats.canvas.ax.barh(range(len(d_present)), d_present.values(), align='center', color="g", label="Present")
         broadcast_rects = self.mpl_dawnservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
@@ -853,7 +853,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         
         self.mpl_dawnservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_dawnservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_dawnservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_dawnservice_daily.canvas.ax.grid(True)
@@ -877,7 +877,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         '''
         Plots a bar chart of the number of members in each dept
         '''
-        members_count = calc_num_all_dept(verbose=False)
+        members_count = calc_num_all_dept(verbose=False, dbhostip=self.databaseHostLineEdit.text())
         
         self.mpl_memberscount.canvas.ax.clear()
         rects = self.mpl_memberscount.canvas.ax.bar(range(len(members_count)), members_count.values(), align='center')
