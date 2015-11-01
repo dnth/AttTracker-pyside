@@ -57,7 +57,17 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>25</width>
+        <height>25</height>
+       </size>
+      </property>
       <widget class="QWidget" name="tab_setup">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../Desktop/setting.png</normaloff>../../Desktop/setting.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Setup</string>
        </attribute>
@@ -189,15 +199,19 @@
        </widget>
       </widget>
       <widget class="QWidget" name="tab_attendance">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../Desktop/Workers.png</normaloff>../../Desktop/Workers.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Attendance</string>
        </attribute>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="label_welcome">
         <property name="geometry">
          <rect>
-          <x>9</x>
+          <x>20</x>
           <y>9</y>
-          <width>442</width>
+          <width>1001</width>
           <height>31</height>
          </rect>
         </property>
@@ -370,7 +384,7 @@
                </property>
                <property name="font">
                 <font>
-                 <pointsize>11</pointsize>
+                 <pointsize>14</pointsize>
                  <weight>50</weight>
                  <bold>false</bold>
                 </font>
@@ -624,6 +638,10 @@
        </widget>
       </widget>
       <widget class="QWidget" name="tab_statistics">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../Desktop/Graph.png</normaloff>../../Desktop/Graph.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Service Statistics</string>
        </attribute>
@@ -996,6 +1014,10 @@
        </layout>
       </widget>
       <widget class="QWidget" name="tab_admin">
+       <attribute name="icon">
+        <iconset>
+         <normaloff>../../Desktop/admin.png</normaloff>../../Desktop/admin.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Administration</string>
        </attribute>
