@@ -569,7 +569,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.current_time = datetime.datetime.time(datetime.datetime.now())
 #         self.current_date = date(2015,10,4)
 #         self.current_time = time(9,0,0)
-        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(12,00,0):
+        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(18,00,0):
             self.event_type = "Sunday Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
@@ -690,7 +690,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_sundayservicedeptstats.canvas.draw()
         
         self.mpl_sundayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service")
         daily_present_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_sundayservice_daily.canvas.ax.grid(True)
@@ -744,7 +744,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_weddayservicedeptstats.canvas.draw() 
         
         self.mpl_wednesdayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting")
+        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service")
         daily_present_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_wednesdayservice_daily.canvas.ax.grid(True)
