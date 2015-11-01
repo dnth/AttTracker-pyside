@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sun Nov  1 23:04:47 2015
+# Created: Sun Nov  1 23:32:24 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -112,7 +112,7 @@ class Ui_LWCAttendanceTaker(object):
         self.gridLayout_19.addWidget(self.pushButton_connecttohome, 2, 0, 1, 1)
         self.verticalLayout_3.addWidget(self.groupBox_5)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../../Desktop/setting.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("icon/setting.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tab_widget_overall.addTab(self.tab_setup, icon, "")
         self.tab_attendance = QtGui.QWidget()
         self.tab_attendance.setObjectName("tab_attendance")
@@ -345,7 +345,7 @@ class Ui_LWCAttendanceTaker(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("../../Desktop/Workers.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("icon/Workers.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tab_widget_overall.addTab(self.tab_attendance, icon1, "")
         self.tab_statistics = QtGui.QWidget()
         self.tab_statistics.setObjectName("tab_statistics")
@@ -576,7 +576,7 @@ class Ui_LWCAttendanceTaker(object):
         self.horizontalLayout_2.addWidget(self.pushButton_plot)
         self.gridLayout_9.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("../../Desktop/Graph.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("icon/Graph.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tab_widget_overall.addTab(self.tab_statistics, icon2, "")
         self.tab_admin = QtGui.QWidget()
         self.tab_admin.setObjectName("tab_admin")
@@ -932,7 +932,7 @@ class Ui_LWCAttendanceTaker(object):
         self.tabWidget_adminmarking.addTab(self.tab_2, "")
         self.gridLayout_7.addWidget(self.tabWidget_adminmarking, 0, 0, 1, 1)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("../../Desktop/admin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("icon/admin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tab_widget_overall.addTab(self.tab_admin, icon3, "")
         self.gridLayout_5.addWidget(self.tab_widget_overall, 1, 0, 1, 1)
         LWCAttendanceTaker.setCentralWidget(self.centralwidget)

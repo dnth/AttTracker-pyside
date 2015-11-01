@@ -47,7 +47,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        self.setWindowIcon(QtGui.QIcon('python.jpg'))
+        self.setWindowIcon(QtGui.QIcon('icon/python.jpg'))
 
         self.actionQuit.triggered.connect(self.close_application)
          

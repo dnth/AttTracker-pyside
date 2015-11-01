@@ -66,7 +66,7 @@
       <widget class="QWidget" name="tab_setup">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../Desktop/setting.png</normaloff>../../Desktop/setting.png</iconset>
+         <normaloff>icon/setting.png</normaloff>icon/setting.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Setup</string>
@@ -201,7 +201,7 @@
       <widget class="QWidget" name="tab_attendance">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../Desktop/Workers.png</normaloff>../../Desktop/Workers.png</iconset>
+         <normaloff>icon/Workers.png</normaloff>icon/Workers.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Attendance</string>
@@ -640,7 +640,7 @@
       <widget class="QWidget" name="tab_statistics">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../Desktop/Graph.png</normaloff>../../Desktop/Graph.png</iconset>
+         <normaloff>icon/Graph.png</normaloff>icon/Graph.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Service Statistics</string>
@@ -1016,7 +1016,7 @@
       <widget class="QWidget" name="tab_admin">
        <attribute name="icon">
         <iconset>
-         <normaloff>../../Desktop/admin.png</normaloff>../../Desktop/admin.png</iconset>
+         <normaloff>icon/admin.png</normaloff>icon/admin.png</iconset>
        </attribute>
        <attribute name="title">
         <string>Administration</string>
