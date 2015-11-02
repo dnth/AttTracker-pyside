@@ -17,6 +17,9 @@ import datetime
 from datetime import date, time
 from time import strftime
 
+print sys.getdefaultencoding()
+print sys.getfilesystemencoding()
+
 class Login(QtGui.QDialog):
     def __init__(self):
         QtGui.QDialog.__init__(self)
@@ -949,7 +952,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 print "Success"
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
-
+                
                 print "Name: %s" % member_data[0][2]
                 
                 self.label_dynamic_name.setText(member_data[0][2])
