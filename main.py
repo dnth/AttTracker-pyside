@@ -953,7 +953,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
                 
-                print "Name: %s" % member_data[0][2]
+                print "Name: %s" % member_data[0][2].encode('utf-8')
                 
                 self.label_dynamic_name.setText(member_data[0][2])
                 
@@ -966,7 +966,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
                 
                 
-                if os.path.exists("pics/%s.jpg" % member_data[0][2]):
+                if os.path.exists("pics/%s.jpg" % member_data[0][2].encode('utf-8')):
                     self.label_picture.setPixmap(QtGui.QPixmap("pics/%s.jpg" % member_data[0][2]).scaledToHeight(200) )
 
                 else:

@@ -135,7 +135,7 @@ define(function (require) {
         this.notebook_name_blacklist_re = /[\/\\:]/;
         this.nbformat = 4; // Increment this when changing the nbformat
         this.nbformat_minor = this.current_nbformat_minor = 0; // Increment this when changing the nbformat
-        this.codemirror_mode = 'ipython';
+        this.codemirror_mode = 'text';
         this.create_elements();
         this.bind_events();
         this.kernel_selector = null;
@@ -301,9 +301,8 @@ define(function (require) {
                     return "Unsaved changes will be lost.";
                 }
             }
-            // Null is the *only* return value that will make the browser not
-            // pop up the "don't leave" dialog.
-            return null;
+            // IE treats null as a string.  Instead just return which will avoid the dialog.
+            return;
         };
     };
     
@@ -664,10 +663,9 @@ define(function (require) {
     Notebook.prototype.command_mode = function () {
         var cell = this.get_cell(this.get_edit_index());
         if (cell && this.mode !== 'command') {
-            // We don't call cell.command_mode, but rather call cell.focus_cell()
-            // which will blur and CM editor and trigger the call to
-            // handle_command_mode.
-            cell.focus_cell();
+            // We don't call cell.command_mode, but rather blur the CM editor
+            // which will trigger the call to handle_command_mode.
+            cell.code_mirror.getInputField().blur();
         }
     };
 
@@ -695,6 +693,16 @@ define(function (require) {
             cell.focus_editor();
         }
     };
+    
+    /**
+     * Ensure either cell, or codemirror is focused. Is none 
+     * is focused, focus the cell.
+     */
+    Notebook.prototype.ensure_focused = function(){
+        var cell = this.get_selected_cell();
+        if (cell === null) {return;}  // No cell is selected
+        cell.ensure_focused();
+    }
 
     /**
      * Focus the currently selected cell.
@@ -1487,29 +1495,50 @@ define(function (require) {
     Notebook.prototype.cell_toggle_line_numbers = function() {
         this.get_selected_cell().toggle_line_numbers();
     };
+
+
+    //dispatch codemirror mode to all cells.
+    Notebook.prototype._dispatch_mode = function(spec, newmode){
+        this.codemirror_mode = newmode;
+        codecell.CodeCell.options_default.cm_config.mode = newmode;
+        this.get_cells().map(function(cell, i) {
+            if (cell.cell_type === 'code'){
+                cell.code_mirror.setOption('mode', spec);
+                // This is currently redundant, because cm_config ends up as
+                // codemirror's own .options object, but I don't want to
+                // rely on that.
+                cell.cm_config.mode = spec;
+            }
+        });
+
+    };
+
+    // roughly try to check mode equality
+    var _mode_equal = function(mode1, mode2){
+        return ((mode1||{}).name||mode1)===((mode2||{}).name||mode2);
+    };
     
     /**
      * Set the codemirror mode for all code cells, including the default for
      * new code cells.
+     * Set the mode to 'null' (no highlighting) if it can't be found.
      */
     Notebook.prototype.set_codemirror_mode = function(newmode){
-        if (newmode === this.codemirror_mode) {
+        // if mode is the same don't reset,
+        // to avoid n-time re-highlighting.
+        if (_mode_equal(newmode, this.codemirror_mode)) {
             return;
         }
-        this.codemirror_mode = newmode;
-        codecell.CodeCell.options_default.cm_config.mode = newmode;
         
         var that = this;
         utils.requireCodeMirrorMode(newmode, function (spec) {
-            that.get_cells().map(function(cell, i) {
-                if (cell.cell_type === 'code'){
-                    cell.code_mirror.setOption('mode', spec);
-                    // This is currently redundant, because cm_config ends up as
-                    // codemirror's own .options object, but I don't want to
-                    // rely on that.
-                    cell.cm_config.mode = spec;
-                }
-            });
+            that._dispatch_mode(spec, newmode);
+        }, function(){
+            // on error don't dispatch the new mode as re-setting it later will not work.
+            // don't either set to null mode if it has been changed in the meantime
+            if( _mode_equal(newmode, this.codemirror_mode) ){
+                that._dispatch_mode('null','null');
+            }
         });
     };
 
@@ -2033,7 +2062,7 @@ define(function (require) {
     Notebook.prototype.copy_notebook = function () {
         var that = this;
         var base_url = this.base_url;
-        var w = window.open(undefined, IPython._target);
+        var w = window.open('', IPython._target);
         var parent = utils.url_path_split(this.notebook_path)[0];
         this.contents.copy(this.notebook_path, parent).then(
             function (data) {
@@ -2074,6 +2103,7 @@ define(function (require) {
             function (json) {
                 that.notebook_name = json.name;
                 that.notebook_path = json.path;
+                that.last_modified = new Date(json.last_modified);
                 that.session.rename_notebook(json.path);
                 that.events.trigger('notebook_renamed.Notebook', json);
             }
@@ -2093,7 +2123,6 @@ define(function (require) {
      * @param {string} notebook_path - A notebook to load
      */
     Notebook.prototype.load_notebook = function (notebook_path) {
-        var that = this;
         this.notebook_path = notebook_path;
         this.notebook_name = utils.url_path_split(this.notebook_path)[1];
         this.events.trigger('notebook_loading.Notebook');

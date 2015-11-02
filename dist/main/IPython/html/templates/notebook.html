@@ -3,7 +3,7 @@
 {% block stylesheet %}
 
 {% if mathjax_url %}
-<script type="text/javascript" src="{{mathjax_url}}?config=TeX-AMS_HTML-full&delayStartupUntil=configured" charset="utf-8"></script>
+<script type="text/javascript" src="{{mathjax_url}}?config=TeX-AMS_HTML-full,Safe&delayStartupUntil=configured" charset="utf-8"></script>
 {% endif %}
 <script type="text/javascript">
 // MathJax disabled, set as null to distingish from *missing* MathJax,
@@ -25,6 +25,7 @@ window.mathjax_url = "{{mathjax_url}}";
 
 {% block params %}
 
+{{super()}}
 data-project="{{project}}"
 data-base-url="{{base_url}}"
 data-ws-url="{{ws_url}}"
@@ -106,8 +107,9 @@ data-notebook-path="{{notebook_path}}"
                                 <li id="download_ipynb"><a href="#">IPython Notebook (.ipynb)</a></li>
                                 <li id="download_script"><a href="#">Script</a></li>
                                 <li id="download_html"><a href="#">HTML (.html)</a></li>
+                                <li id="download_markdown"><a href="#">Markdown (.md)</a></li>
                                 <li id="download_rst"><a href="#">reST (.rst)</a></li>
-                                <li id="download_pdf"><a href="#">PDF (.pdf)</a></li>
+                                <li id="download_pdf"><a href="#">PDF via LaTeX (.pdf)</a></li>
                             </ul>
                         </li>
                         <li class="divider"></li>

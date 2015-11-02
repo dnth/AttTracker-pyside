@@ -98,7 +98,7 @@ define([
             notebook: this.notebook});
         inner_cell.append(this.celltoolbar.element);
         var input_area = $('<div/>').addClass('input_area');
-        this.code_mirror = new CodeMirror(input_area.get(0), this.cm_config);
+        this.code_mirror = new CodeMirror(input_area.get(0), this._options.cm_config);
         // In case of bugs that put the keyboard manager into an inconsistent state,
         // ensure KM is enabled when CodeMirror is focused:
         this.code_mirror.on('focus', function () {
@@ -129,7 +129,6 @@ define([
     };
 
     TextCell.prototype.unrender = function () {
-        if (this.read_only) return;
         var cont = Cell.prototype.unrender.apply(this);
         if (cont) {
             var text_cell = this.element;
@@ -230,10 +229,10 @@ define([
          */
         options = options || {};
         var config = utils.mergeopt(MarkdownCell, {});
-        TextCell.apply(this, [$.extend({}, options, {config: config})]);
-
         this.class_config = new configmod.ConfigWithDefaults(options.config,
                                             {}, 'MarkdownCell');
+        TextCell.apply(this, [$.extend({}, options, {config: config})]);
+
         this.cell_type = 'markdown';
     };
 

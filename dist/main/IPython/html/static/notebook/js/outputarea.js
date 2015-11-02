@@ -484,6 +484,7 @@ define([
                 last.text = utils.fixCarriageReturn(last.text + json.text);
                 var pre = this.element.find('div.'+subclass).last().find('pre');
                 var html = utils.fixConsole(last.text);
+                html = utils.autoLinkUrls(html);
                 // The only user content injected with this HTML call is
                 // escaped by the fixConsole() method.
                 pre.html(html);
@@ -587,6 +588,7 @@ define([
         var toinsert = this.create_output_subarea(md, "output_html rendered_html", type);
         this.keyboard_manager.register_events(toinsert);
         toinsert.append(html);
+        dblclick_to_reset_size(toinsert.find('img'));
         element.append(toinsert);
         return toinsert;
     };
@@ -602,6 +604,7 @@ define([
             html = mathjaxutils.replace_math(html, math);
             toinsert.append(html);
         });
+        dblclick_to_reset_size(toinsert.find('img'));
         element.append(toinsert);
         return toinsert;
     };
@@ -660,12 +663,6 @@ define([
             .width(width)
             .height(height);
 
-        // The jQuery resize handlers don't seem to work on the svg element.
-        // When the svg renders completely, measure it's size and set the parent
-        // div to that size.  Then set the svg to 100% the size of the parent
-        // div and make the parent div resizable.  
-        this._dblclick_to_reset_size(svg_area, true, false);
-
         svg_area.append(svg);
         toinsert.append(svg_area);
         element.append(toinsert);
@@ -673,46 +670,23 @@ define([
         return toinsert;
     };
 
-    OutputArea.prototype._dblclick_to_reset_size = function (img, immediately, resize_parent) {
+    function dblclick_to_reset_size (img) {
         /**
-         * Add a resize handler to an element
+         * Double-click on an image toggles confinement to notebook width
          *
          * img: jQuery element
-         * immediately: bool=False
-         *      Wait for the element to load before creating the handle.
-         * resize_parent: bool=True
-         *      Should the parent of the element be resized when the element is
-         *      reset (by double click).
          */
-        var callback = function (){
-            var h0 = img.height();
-            var w0 = img.width();
-            if (!(h0 && w0)) {
-                // zero size, don't make it resizable
-                return;
-            }
-            img.resizable({
-                aspectRatio: true,
-                autoHide: true
-            });
-            img.dblclick(function () {
-                // resize wrapper & image together for some reason:
-                img.height(h0);
-                img.width(w0);
-                if (resize_parent === undefined || resize_parent) {
-                    img.parent().height(h0);
-                    img.parent().width(w0);
-                }
-            });
-        };
 
-        if (immediately) {
-            callback();
-        } else {
-            img.on("load", callback);
-        }
+        img.dblclick(function () {
+            // dblclick toggles *raw* size, disabling max-width confinement.
+            if (img.hasClass('unconfined')) {
+                img.removeClass('unconfined');
+            } else {
+                img.addClass('unconfined');
+            }
+        });
     };
-    
+
     var set_width_height = function (img, md, mime) {
         /**
          * set width and height of an img element from metadata
@@ -721,6 +695,9 @@ define([
         if (height !== undefined) img.attr('height', height);
         var width = _get_metadata_key(md, 'width', mime);
         if (width !== undefined) img.attr('width', width);
+        if (_get_metadata_key(md, 'unconfined', mime)) {
+            img.addClass('unconfined');
+        }
     };
     
     var append_png = function (png, md, element, handle_inserted) {
@@ -734,7 +711,7 @@ define([
         }
         img[0].src = 'data:image/png;base64,'+ png;
         set_width_height(img, md, 'image/png');
-        this._dblclick_to_reset_size(img);
+        dblclick_to_reset_size(img);
         toinsert.append(img);
         element.append(toinsert);
         return toinsert;
@@ -752,7 +729,7 @@ define([
         }
         img[0].src = 'data:image/jpeg;base64,'+ jpeg;
         set_width_height(img, md, 'image/jpeg');
-        this._dblclick_to_reset_size(img);
+        dblclick_to_reset_size(img);
         toinsert.append(img);
         element.append(toinsert);
         return toinsert;

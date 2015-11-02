@@ -142,6 +142,9 @@ width={{output.metadata['image/png']['width']}}
 {%- if 'height' in output.metadata.get('image/png', {}) %}
 height={{output.metadata['image/png']['height']}}
 {%- endif %}
+{%- if output.metadata.get('image/png', {}).get('unconfined') %}
+class="unconfined"
+{%- endif %}
 >
 </div>
 {%- endblock data_png %}
@@ -192,7 +195,7 @@ height={{output.metadata['image/jpeg']['height']}}
 {%- block data_javascript scoped %}
 <div class="output_subarea output_javascript {{extra_class}}">
 <script type="text/javascript">
-{{ output.data['text/javascript'] }}
+{{ output.data['application/javascript'] }}
 </script>
 </div>
 {%- endblock -%}
