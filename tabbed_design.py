@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Tue Nov  3 22:31:56 2015
+# Created: Tue Nov  3 22:54:26 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_LWCAttendanceTaker(object):
     def setupUi(self, LWCAttendanceTaker):
         LWCAttendanceTaker.setObjectName("LWCAttendanceTaker")
-        LWCAttendanceTaker.resize(1050, 776)
+        LWCAttendanceTaker.resize(1106, 776)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -117,7 +117,7 @@ class Ui_LWCAttendanceTaker(object):
         self.tab_attendance = QtGui.QWidget()
         self.tab_attendance.setObjectName("tab_attendance")
         self.label_welcome = QtGui.QLabel(self.tab_attendance)
-        self.label_welcome.setGeometry(QtCore.QRect(20, 9, 1001, 31))
+        self.label_welcome.setGeometry(QtCore.QRect(10, 9, 1061, 31))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -340,7 +340,7 @@ class Ui_LWCAttendanceTaker(object):
         self.horizontalLayout_9.addWidget(self.label_picture)
         self.verticalLayout_5.addWidget(self.groupBox_2)
         self.line = QtGui.QFrame(self.tab_attendance)
-        self.line.setGeometry(QtCore.QRect(17, 310, 991, 21))
+        self.line.setGeometry(QtCore.QRect(17, 310, 1051, 21))
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
@@ -940,7 +940,7 @@ class Ui_LWCAttendanceTaker(object):
         self.gridLayout_5.addWidget(self.tab_widget_overall, 1, 0, 1, 1)
         LWCAttendanceTaker.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(LWCAttendanceTaker)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1050, 25))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1106, 25))
         self.menubar.setObjectName("menubar")
         self.menuFlie = QtGui.QMenu(self.menubar)
         self.menuFlie.setObjectName("menuFlie")
@@ -957,7 +957,7 @@ class Ui_LWCAttendanceTaker(object):
         self.menubar.addAction(self.menuFlie.menuAction())
 
         self.retranslateUi(LWCAttendanceTaker)
-        self.tab_widget_overall.setCurrentIndex(0)
+        self.tab_widget_overall.setCurrentIndex(1)
         self.tabWidget_statistics.setCurrentIndex(0)
         self.stackedWidget_ss.setCurrentIndex(0)
         self.stackedWidget_ws.setCurrentIndex(0)

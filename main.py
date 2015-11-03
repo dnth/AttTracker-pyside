@@ -568,32 +568,32 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     def updateEventStatus(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
-        self.event_id=None
+        self.event_id = None
         self.current_date = datetime.datetime.date(datetime.datetime.now())
         self.current_time = datetime.datetime.time(datetime.datetime.now())
 #         self.current_date = date(2015,10,4)
 #         self.current_time = time(9,0,0)
-        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(18,00,0):
+        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
             self.event_type = "Sunday Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Sunday Service")
-            self.label_welcome.setText("Welcome, swipe ID for Sunday Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Sunday Service Attendance!")
         elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(18,0,0) and self.current_time <= time(21,30,0):
             self.event_type = "Wednesday Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Wednesday Service")
-            self.label_welcome.setText("Welcome, swipe ID for Wednesday Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Wednesday Service Attendance!")
         elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(21,30,0):
             self.event_type = "Friday Prayer Meeting"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Friday Prayer Meeting")
-            self.label_welcome.setText("Welcome, swipe ID for Friday Prayer Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Friday Prayer Attendance!")
                         
         elif self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
             self.event_type = "Dawn Service"
@@ -601,7 +601,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         elif self.current_date.strftime("%A") == "Monday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
@@ -615,35 +615,35 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         elif self.current_date.strftime("%A") == "Thursday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         elif self.current_date.strftime("%A") == "Saturday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         
         else:
             self.label_dynamic_event.setText("No event now =(")
@@ -901,7 +901,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_memberscount.canvas.ax.set_xticklabels(members_count.keys())
         self.mpl_memberscount.canvas.ax.set_xlabel("Department")
         self.mpl_memberscount.canvas.ax.set_ylabel("Number of members")
-        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution")
+        self.mpl_memberscount.canvas.ax.set_ylim([0,40])
+        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution, Total Active Members:%d" % (sum(members_count.values())))
         self.mpl_memberscount.canvas.ax.grid(True)
         # label values on graph
         for rect in rects:
