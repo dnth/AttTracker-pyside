@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sun Nov  1 23:32:24 2015
+# Created: Tue Nov  3 22:31:56 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -707,15 +707,15 @@ class Ui_LWCAttendanceTaker(object):
         self.comboBox_viewtabledept.setObjectName("comboBox_viewtabledept")
         self.gridLayout_4.addWidget(self.comboBox_viewtabledept, 1, 1, 1, 1)
         spacerItem6 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_4.addItem(spacerItem6, 1, 4, 1, 1)
+        self.gridLayout_4.addItem(spacerItem6, 1, 5, 1, 1)
         self.tableWidget = QtGui.QTableWidget(self.tab_3)
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)
-        self.gridLayout_4.addWidget(self.tableWidget, 0, 0, 1, 5)
+        self.gridLayout_4.addWidget(self.tableWidget, 0, 0, 1, 6)
         self.pushButton_commitchange = QtGui.QPushButton(self.tab_3)
         self.pushButton_commitchange.setObjectName("pushButton_commitchange")
-        self.gridLayout_4.addWidget(self.pushButton_commitchange, 1, 3, 1, 1)
+        self.gridLayout_4.addWidget(self.pushButton_commitchange, 1, 4, 1, 1)
         self.pushButton_loadmemberdetails = QtGui.QPushButton(self.tab_3)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -723,7 +723,10 @@ class Ui_LWCAttendanceTaker(object):
         sizePolicy.setHeightForWidth(self.pushButton_loadmemberdetails.sizePolicy().hasHeightForWidth())
         self.pushButton_loadmemberdetails.setSizePolicy(sizePolicy)
         self.pushButton_loadmemberdetails.setObjectName("pushButton_loadmemberdetails")
-        self.gridLayout_4.addWidget(self.pushButton_loadmemberdetails, 1, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.pushButton_loadmemberdetails, 1, 3, 1, 1)
+        self.checkBox_inactivememebrs = QtGui.QCheckBox(self.tab_3)
+        self.checkBox_inactivememebrs.setObjectName("checkBox_inactivememebrs")
+        self.gridLayout_4.addWidget(self.checkBox_inactivememebrs, 1, 2, 1, 1)
         self.tabWidget_adminmarking.addTab(self.tab_3, "")
         self.tab_4 = QtGui.QWidget()
         self.tab_4.setObjectName("tab_4")
@@ -1015,6 +1018,7 @@ class Ui_LWCAttendanceTaker(object):
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab), QtGui.QApplication.translate("LWCAttendanceTaker", "Members Count", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_commitchange.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Commit Changes", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_loadmemberdetails.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Load", None, QtGui.QApplication.UnicodeUTF8))
+        self.checkBox_inactivememebrs.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Inactive Members", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab_3), QtGui.QApplication.translate("LWCAttendanceTaker", "Edit Members\' Details", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_6.setTitle(QtGui.QApplication.translate("LWCAttendanceTaker", "Add New Member", None, QtGui.QApplication.UnicodeUTF8))
         self.nameLabel.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Name", None, QtGui.QApplication.UnicodeUTF8))

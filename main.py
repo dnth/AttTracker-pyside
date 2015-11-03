@@ -234,10 +234,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.statusbar.showMessage("Loaded database")
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         
-        if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
-            cur.execute("SELECT * FROM members_list ORDER BY dept")
-        else: 
-            cur.execute("SELECT * FROM members_list WHERE dept='%s' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
+        if self.checkBox_inactivememebrs.isChecked():
+            if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
+                cur.execute("SELECT * FROM members_list ORDER BY dept")
+            else: 
+                cur.execute("SELECT * FROM members_list WHERE dept='%s' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
+        else:
+            if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
+                cur.execute("SELECT * FROM members_list WHERE membership_status='Active' ORDER BY dept")
+            else: 
+                cur.execute("SELECT * FROM members_list WHERE dept='%s' AND membership_status='Active' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
         
         memberlist = cur.fetchall()
         self.tableWidget.setRowCount(len(memberlist))
@@ -963,8 +969,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     self.label_dynamic_engname.setText(member_data[0][3])
 
                 self.label_dynamic_dept.setText(member_data[0][4])
-                
-                
                 
                 if os.path.exists("pics/%s.jpg" % member_data[0][2].encode('utf-8')):
                     self.label_picture.setPixmap(QtGui.QPixmap("pics/%s.jpg" % member_data[0][2]).scaledToHeight(200) )
