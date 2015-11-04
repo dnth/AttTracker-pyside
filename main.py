@@ -17,8 +17,8 @@ import datetime
 from datetime import date, time
 from time import strftime
 
-print sys.getdefaultencoding()
-print sys.getfilesystemencoding()
+# print sys.getdefaultencoding()
+# print sys.getfilesystemencoding()
 
 class Login(QtGui.QDialog):
     def __init__(self):
@@ -66,7 +66,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
     def home(self):
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-        self.statusbar.showMessage("No database connected. Enter the IP address of the database server")
+        self.statusbar.showMessage("Connect to the RFID reader and database to start")
         
 #         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         self.pushButton_quit.clicked.connect(self.close_application)
