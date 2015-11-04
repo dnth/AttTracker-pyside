@@ -991,6 +991,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         print "Event:", self.event_type, self.event_date 
                         self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
                         self.label_dynamic_status.setStyleSheet("color: green")
+                        self.statusbar.clearMessage()
+                        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
     
                     else:
                         print "Record exists for:"
@@ -998,9 +1000,13 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         print "Event:", self.event_type, self.event_date
                         self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
                         self.label_dynamic_status.setStyleSheet("color: red")
+                        self.statusbar.clearMessage()
+                        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                 else:
                     self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
                     self.label_dynamic_status.setStyleSheet("color: black")
+                    self.statusbar.clearMessage()
+                    self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
 
             else:
                 print "Sorry no match in database!"
@@ -1011,6 +1017,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.label_dynamic_dept.clear()
                 self.label_dynamic_rfid.clear()
                 self.label_dynamic_engname.clear()
+                self.statusbar.clearMessage()
+                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                 
         
 def main():
