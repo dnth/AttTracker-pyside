@@ -522,10 +522,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         if duplicate == 0:
 #             self.label_admintab_dynamic_remarks.setText( "Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
 #             self.label_admintab_dynamic_remarks.setStyleSheet("color: green")
-            self.statusbar.showMessage("Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
+            
+#             self.statusbar.showMessage("Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status) VALUES ('%d', '%d', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
             db.commit()
+            self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=%s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd"), self.comboBox_admintab_status.currentText()))
         else:
             self.statusbar.showMessage("Duplicate entry")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
@@ -537,7 +539,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         cur = db.cursor()
         cur.execute("SELECT id from members_list WHERE chi_name='%s' " % self.comboBox_admintab_name.currentText() )
         member_id = cur.fetchall()
-        cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'  " % (self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+        cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'" % (self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
         event_id = cur.fetchall()
         
         if event_id == ():
@@ -555,9 +557,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         else:
             cur.execute("DELETE FROM new_attendance_table WHERE member_id=%d AND event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
 #             self.label_admintab_dynamic_remarks.setText( "Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
-            self.statusbar.showMessage("Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
+#             self.statusbar.showMessage("Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             db.commit()
+            self.statusbar.showMessage("Deleted attendance for %s for %s on %s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
 ####################################################################################################################################################        
    
     def Time(self):
