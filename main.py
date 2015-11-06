@@ -565,10 +565,36 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusbar.showMessage("Deleted attendance for %s for %s on %s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
 
     def viewAttendance(self):
+        
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
-        cur.execute("SELECT chi_name, status FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
-        print cur.fetchall()
+        
+        cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'" % (self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+        event_id = cur.fetchall()
+        
+        # check if event exists
+        if event_id == ():
+            self.statusbar.showMessage("No such event! Check event type")
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            
+        else:
+            cur.execute("SELECT chi_name, status FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+            attendees = cur.fetchall()
+            
+            self.tableWidget_attendee.setRowCount(len(attendees))
+            self.tableWidget_attendee.setColumnCount(2)
+            self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status" ])
+            
+            for rownumber, rowvalue in enumerate(attendees):
+                self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
+                self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
+            
+            self.statusbar.showMessage("Attendees loaded")
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+        
+        
+        
 ####################################################################################################################################################        
    
     def Time(self):
