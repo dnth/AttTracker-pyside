@@ -82,10 +82,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # serial port stuff
         self.load_serial_port_2()
         
-        # attendance marking stuff
+        # attendance marking and view stuff
         self.pushButton_submit.clicked.connect(self.submit_attendance)
         self.pushButton_delete.clicked.connect(self.delete_attendance)
-#         self.pushButton_reload_attlist.clicked.connect(self.load_admin_name_status_combobox)
+        self.pushButton_viewatt.clicked.connect(self.viewAttendance)
+        
         
         self.comboBox_admintab_dept.currentIndexChanged.connect(self.load_admin_name_status_combobox)
         
@@ -409,6 +410,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         eventlist = cur.fetchall()
         for event in eventlist:
             self.comboBox_admintab_event.addItems(event)
+            self.comboBox_eventviewatt.addItems(event)
         db.close()
             
     def load_admin_name_status_combobox(self):
@@ -561,6 +563,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             db.commit()
             self.statusbar.showMessage("Deleted attendance for %s for %s on %s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+
+    def viewAttendance(self):
+        db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
+        cur = db.cursor()
+        cur.execute("SELECT chi_name, status FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+        print cur.fetchall()
 ####################################################################################################################################################        
    
     def Time(self):
@@ -693,9 +701,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_sundayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_sundayservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
         
         self.mpl_sundayservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_sundayservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -725,8 +733,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_sundayservice_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_sundayservice_daily.canvas.draw()
              
     def plot_wednesday_service(self): 
@@ -747,9 +755,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_weddayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_weddayservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
         
         self.mpl_weddayservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_weddayservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -779,8 +787,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_wednesdayservice_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_wednesdayservice_daily.canvas.draw()
     
     def plot_friday_prayer(self):
@@ -801,9 +809,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_fridayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_fridayservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
 
         self.mpl_fridayservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_fridayservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -833,8 +841,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_fridayprayer_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_fridayprayer_daily.canvas.draw()
     
     def plot_dawn_service(self):   
@@ -855,9 +863,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_dawnservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_dawnservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
             
         self.mpl_dawnservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_dawnservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -888,8 +896,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_dawnservice_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_dawnservice_daily.canvas.draw()
         
     def plot_dept_stats(self):
@@ -914,7 +922,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     ha='center', va='bottom', color='blue', fontweight='bold')
             
         # hover mouse
-        datacursor(rects, hover=True,formatter='{height}'.format)
+        datacursor(rects, hover=False,formatter='{height}'.format)
         
         self.mpl_memberscount.canvas.draw()
         
