@@ -308,8 +308,36 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             else:    
                 self.tableWidget.setItem(rownumber,9,QtGui.QTableWidgetItem(rowvalue[9]))
         
+        # color the table cell according to dept
+        for rownumber, rowvalue in enumerate(memberlist):
+            if rowvalue[4] == "CL":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(51,204,255))
+            if rowvalue[4] == "BF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(179,255,153))
+            if rowvalue[4] == "JS":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,214,92))
+            if rowvalue[4] == "YM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(252,217,187))
+            if rowvalue[4] == "YF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(245, 162, 46))
+            if rowvalue[4] == "CM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(251, 157, 240))
+            if rowvalue[4] == "CF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(247, 136, 190))
+            if rowvalue[4] == "SSM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(180, 247, 136))
+            if rowvalue[4] == "SSF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(241, 247, 136))
+            if rowvalue[4] == "MWM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(189, 230, 255))
+            if rowvalue[4] == "MWF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(54, 177, 252))
+            if rowvalue[4] == "GL":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(176, 236, 238))
+            if rowvalue[4] == "OS":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(217, 223, 226))
 
-        # load combobox values
+        # load combobox values in the table cell
         dept_list = ["CL","BF", "JS", "YM", "YF", "CM", "CF", "SSM", "SSF", "MWM", "MWF", "GL", "OS"]
         gender_list = ["M","F"]
         status_list = ["Active", "Inactive"]
@@ -358,7 +386,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             idnum = int(self.tableWidget.item(row, 0).text())
             
 
-
             if rfid_num == "":
                 cur.execute("UPDATE members_list SET rfid_num=NULL WHERE id=%d" % (idnum))
             else:
@@ -398,7 +425,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_addmemberdept.clear()
         for dept in deptlist:
             self.comboBox_addmemberdept.addItems(dept)
-            
         
         self.comboBox_addmembergender.addItems(["F", "M"])
         db.close()
@@ -498,12 +524,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             if os.path.exists("pics/%s.jpg" % self.comboBox_profilename.currentText()):
                         self.label_personalpic.setPixmap(QtGui.QPixmap("pics/%s.jpg" % self.comboBox_profilename.currentText()).scaledToHeight(200) )
             else:
-                self.label_personalpic.setPixmap(QtGui.QPixmap("unknown_profile.png" ).scaledToHeight(160))
+                self.label_personalpic.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
         
         
 ####################################################################################################################################################    
 
-        
     def submit_attendance(self):
 #         self.label_admintab_dynamic_remarks.setStyleSheet("color: none")
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
@@ -593,6 +618,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
                 self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
                 self.tableWidget_attendee.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
+                
+                # highlight broadcast members for easier view
+                if rowvalue[1]=='B':
+                    self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(51,204,255))
+                    self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(51,204,255))
+                    self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(51,204,255))
             
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
@@ -1016,7 +1047,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     self.label_picture.setPixmap(QtGui.QPixmap("pics/%s.jpg" % member_data[0][2]).scaledToHeight(200) )
 
                 else:
-                    self.label_picture.setPixmap(QtGui.QPixmap("unknown_profile.png" ).scaledToHeight(160))
+                    self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
                  
                 self.updateEventStatus()
                 print "Event ID", self.event_id

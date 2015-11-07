@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sat Nov  7 17:36:49 2015
+# Created: Sat Nov  7 19:06:11 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_LWCAttendanceTaker(object):
     def setupUi(self, LWCAttendanceTaker):
         LWCAttendanceTaker.setObjectName("LWCAttendanceTaker")
-        LWCAttendanceTaker.resize(1200, 729)
+        LWCAttendanceTaker.resize(1200, 817)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -210,7 +210,7 @@ class Ui_LWCAttendanceTaker(object):
         self.formLayout_2.setWidget(2, QtGui.QFormLayout.FieldRole, self.label_dynamic_event)
         self.verticalLayout_4.addWidget(self.groupBox_4)
         self.verticalLayoutWidget_3 = QtGui.QWidget(self.tab_attendance)
-        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(30, 340, 741, 261))
+        self.verticalLayoutWidget_3.setGeometry(QtCore.QRect(30, 340, 741, 326))
         self.verticalLayoutWidget_3.setObjectName("verticalLayoutWidget_3")
         self.verticalLayout_5 = QtGui.QVBoxLayout(self.verticalLayoutWidget_3)
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -323,7 +323,7 @@ class Ui_LWCAttendanceTaker(object):
         self.label_picture = QtGui.QLabel(self.groupBox_2)
         self.label_picture.setMinimumSize(QtCore.QSize(160, 160))
         self.label_picture.setText("")
-        self.label_picture.setPixmap(QtGui.QPixmap("unknown_profile.png"))
+        self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png"))
         self.label_picture.setObjectName("label_picture")
         self.horizontalLayout_9.addWidget(self.label_picture)
         self.verticalLayout_5.addWidget(self.groupBox_2)

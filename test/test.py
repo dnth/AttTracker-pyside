@@ -1,14 +1,35 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from mpldatacursor import datacursor
+from PySide import QtCore, QtGui
 
-def formatter(**kwargs):
-    height = kwargs['height']
-    return "This bar is {:0.2f} units tall".format(height)
 
-fig, ax = plt.subplots()
-ax.bar(np.arange(5), np.random.random(5), color='lightblue')
-ax.margins(0.05)
-ax.set_ylim(bottom=0)
-datacursor(formatter=formatter, hover=True)
-plt.show()
+class DigitalClock(QtGui.QLCDNumber):
+    def __init__(self, parent=None):
+        super(DigitalClock, self).__init__(parent)
+
+        self.setSegmentStyle(QtGui.QLCDNumber.Filled)
+
+        timer = QtCore.QTimer(self)
+        timer.timeout.connect(self.showTime)
+        timer.start(1000)
+
+        self.showTime()
+
+        self.setWindowTitle("Digital Clock")
+        self.resize(150, 60)
+
+    def showTime(self):
+        time = QtCore.QTime.currentTime()
+        text = time.toString('hh:mm')
+        if (time.second() % 2) == 0:
+            text = text[:2] + ' ' + text[3:]
+
+        self.display(text)
+
+
+if __name__ == '__main__':
+
+    import sys
+
+    app = QtGui.QApplication(sys.argv)
+    clock = DigitalClock()
+    clock.show()
+    sys.exit(app.exec_())
