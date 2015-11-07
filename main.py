@@ -419,10 +419,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_admintab_name.clear()
         self.comboBox_admintab_status.clear()
         
-        cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
+        cur.execute("SELECT chi_name, eng_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
         namelist = cur.fetchall()
-        for name in namelist:
-            self.comboBox_admintab_name.addItems(name)
+
+        for name in namelist: 
+            self.comboBox_admintab_name.addItems(["%s -- %s"% (name[0], name[1])])
         self.comboBox_admintab_status.addItems(["P", "B"])
         
         db.close()

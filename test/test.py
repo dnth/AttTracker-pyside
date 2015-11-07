@@ -1,11 +1,14 @@
+import numpy as np
 import matplotlib.pyplot as plt
 from mpldatacursor import datacursor
 
+def formatter(**kwargs):
+    height = kwargs['height']
+    return "This bar is {:0.2f} units tall".format(height)
+
 fig, ax = plt.subplots()
-ax.plot(range(10), 'bo-')
-ax.set_title('Press "e" to enable/disable the datacursor\n'
-             'Press "h" to hide any annotation boxes')
-
-dc = datacursor(keybindings=dict(hide='h', toggle='e'))
-
+ax.bar(np.arange(5), np.random.random(5), color='lightblue')
+ax.margins(0.05)
+ax.set_ylim(bottom=0)
+datacursor(formatter=formatter, hover=True)
 plt.show()
