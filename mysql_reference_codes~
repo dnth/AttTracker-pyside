@@ -1,0 +1,61 @@
+# for attendance_summary
+CREATE VIEW attendance_summary AS
+SELECT member.id, member.rfid_num, member.family_name,member.given_name, member.dept ,attendance.status, event.event_date, event.event_name, event.event_type, attendance.event_id
+FROM member, attendance, event
+WHERE member.id = attendance.member_id AND event.event_id = attendance.event_id
+
+# for attendance_summary_full
+SELECT members_list.id, members_list.rfid_num, members_list.chi_name, members_list.dept ,attendance.status, event.event_date, event.event_name, event.event_type, attendance.event_id
+FROM members_list, attendance, event
+WHERE members_list.id = attendance.member_id AND event.event_id = attendance.event_id
+
+CREATE VIEW att_summ_2 AS
+SELECT members_list.id, members_list.rfid_num, members_list.chi_name, members_list.dept ,attendance_test_2.status, event_test.event_date, event_test.event_name, event_test.event_type, attendance_test_2.event_id
+FROM members_list, attendance_test_2, event_test
+WHERE members_list.id = attendance_test_2.member_id AND event_test.event_id = attendance_test_2.event_id
+
+CREATE VIEW member_attendance_summary AS
+SELECT members_list.id, members_list.rfid_num, members_list.chi_name, members_list.dept ,new_attendance_table.status, event_test.event_date, event_test.event_name, event_test.event_type, new_attendance_table.event_id
+FROM members_list, new_attendance_table, event_test
+WHERE members_list.id = new_attendance_table.member_id AND event_test.event_id = new_attendance_table.event_id
+
+
+# for personal_attendance_count
+CREATE VIEW personal_att_count AS
+SELECT id, rfid_num, family_name, given_name, dept,
+SUM(STATUS =  'P' ) AS Present, 
+SUM(STATUS =  'A' ) AS Absent, 
+SUM(STATUS =  'B' ) AS Broadcast
+FROM attendance_summary
+GROUP BY id
+
+# personal attendance count for october for sunday service
+SELECT rfid_num, chi_name, dept,
+SUM(STATUS =  'P' ) AS Present, 
+SUM(STATUS =  'A' ) AS Absent, 
+SUM(STATUS =  'B' ) AS Broadcast
+FROM member_attendance_summary
+WHERE month(event_date)=10 AND event_type = 'Sunday Service'
+GROUP BY id
+
+# for event attendance count
+CREATE VIEW event_att_count AS
+SELECT event_id,event_date, event_name,
+SUM(STATUS =  'P' ) AS Present, 
+SUM(STATUS =  'A' ) AS Absent, 
+SUM(STATUS =  'B' ) AS Broadcast
+FROM attendance_summary
+GROUP BY event_id
+
+
+# in case of addition and deletion of members use this to recount the id
+SET @count = 0;
+UPDATE `member` SET `member`.`id` = @count:= @count + 1;
+ALTER TABLE `users` AUTO_INCREMENT = 1; # means reset MAX(id) + 1.
+
+# add unique key in table
+ALTER TABLE `event_test` ADD UNIQUE KEY ( `event_date`, `event_type`);
+
+#backup
+mysqldump -u root -p lwc_members > lwc_members.sql
+

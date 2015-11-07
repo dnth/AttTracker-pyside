@@ -578,17 +578,18 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             
         else:
-            cur.execute("SELECT chi_name, status FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+            cur.execute("SELECT chi_name, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
             attendees = cur.fetchall()
             
             self.tableWidget_attendee.setRowCount(len(attendees))
-            self.tableWidget_attendee.setColumnCount(2)
+            self.tableWidget_attendee.setColumnCount(3)
             self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status" ])
+            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status", "Time In" ])
             
             for rownumber, rowvalue in enumerate(attendees):
                 self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
                 self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
+                self.tableWidget_attendee.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
             
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")

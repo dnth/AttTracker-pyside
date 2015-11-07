@@ -15,7 +15,7 @@ FROM members_list, attendance_test_2, event_test
 WHERE members_list.id = attendance_test_2.member_id AND event_test.event_id = attendance_test_2.event_id
 
 CREATE VIEW member_attendance_summary AS
-SELECT members_list.id, members_list.rfid_num, members_list.chi_name, members_list.dept ,new_attendance_table.status, event_test.event_date, event_test.event_name, event_test.event_type, new_attendance_table.event_id
+SELECT members_list.id, members_list.rfid_num, members_list.chi_name, members_list.dept ,new_attendance_table.status, event_test.event_date, event_test.event_name, event_test.event_type, new_attendance_table.event_id, new_attendance_table.timestamp
 FROM members_list, new_attendance_table, event_test
 WHERE members_list.id = new_attendance_table.member_id AND event_test.event_id = new_attendance_table.event_id
 

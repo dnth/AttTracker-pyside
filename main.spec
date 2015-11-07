@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/home/administration/AttTracker-pyside'],
+             pathex=['/home/camaro/workspace/AttTracker-pyside'],
              binaries=None,
              datas=None,
              hiddenimports=[],

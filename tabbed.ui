@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1262</width>
+    <width>1277</width>
     <height>776</height>
    </rect>
   </property>
@@ -1010,52 +1010,6 @@
                <string>Attendance Marking</string>
               </property>
               <layout class="QGridLayout" name="gridLayout">
-               <item row="3" column="1">
-                <widget class="QCalendarWidget" name="calendarWidget">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>180</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <family>Ubuntu</family>
-                   <pointsize>14</pointsize>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                   <kerning>true</kerning>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>PointingHandCursor</cursorShape>
-                 </property>
-                 <property name="gridVisible">
-                  <bool>true</bool>
-                 </property>
-                 <property name="verticalHeaderFormat">
-                  <enum>QCalendarWidget::NoVerticalHeader</enum>
-                 </property>
-                 <property name="navigationBarVisible">
-                  <bool>true</bool>
-                 </property>
-                 <property name="dateEditEnabled">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="comboBox_admintab_dept"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="comboBox_admintab_name"/>
-               </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_admintab_name">
                  <property name="font">
@@ -1112,6 +1066,52 @@
                <item row="4" column="1">
                 <widget class="QComboBox" name="comboBox_admintab_status"/>
                </item>
+               <item row="3" column="1">
+                <widget class="QCalendarWidget" name="calendarWidget">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>180</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Ubuntu</family>
+                   <pointsize>14</pointsize>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                   <kerning>true</kerning>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>PointingHandCursor</cursorShape>
+                 </property>
+                 <property name="gridVisible">
+                  <bool>true</bool>
+                 </property>
+                 <property name="verticalHeaderFormat">
+                  <enum>QCalendarWidget::NoVerticalHeader</enum>
+                 </property>
+                 <property name="navigationBarVisible">
+                  <bool>true</bool>
+                 </property>
+                 <property name="dateEditEnabled">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="comboBox_admintab_dept"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="comboBox_admintab_name"/>
+               </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_admintab_dept">
                  <property name="font">
@@ -1127,6 +1127,19 @@
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
+               </item>
+               <item row="5" column="1">
+                <spacer name="verticalSpacer">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item row="4" column="0">
                 <widget class="QLabel" name="label_admintab_status">
@@ -1159,19 +1172,6 @@
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
                 </widget>
-               </item>
-               <item row="5" column="1">
-                <spacer name="verticalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
               </layout>
              </widget>
@@ -1265,7 +1265,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>Attendee</string>
+                  <string>Attendee(s)</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1791,7 +1791,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1262</width>
+     <width>1277</width>
      <height>25</height>
     </rect>
    </property>
