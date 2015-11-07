@@ -24,7 +24,7 @@
     <item row="1" column="0">
      <widget class="QTabWidget" name="tab_widget_overall">
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -597,7 +597,7 @@
          <rect>
           <x>17</x>
           <y>310</y>
-          <width>1051</width>
+          <width>1221</width>
           <height>21</height>
          </rect>
         </property>

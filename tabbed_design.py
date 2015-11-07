@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sat Nov  7 14:40:56 2015
+# Created: Sat Nov  7 14:43:42 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -327,7 +327,7 @@ class Ui_LWCAttendanceTaker(object):
         self.horizontalLayout_9.addWidget(self.label_picture)
         self.verticalLayout_5.addWidget(self.groupBox_2)
         self.line = QtGui.QFrame(self.tab_attendance)
-        self.line.setGeometry(QtCore.QRect(17, 310, 1051, 21))
+        self.line.setGeometry(QtCore.QRect(17, 310, 1221, 21))
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
@@ -1005,7 +1005,7 @@ class Ui_LWCAttendanceTaker(object):
         self.menubar.addAction(self.menuFlie.menuAction())
 
         self.retranslateUi(LWCAttendanceTaker)
-        self.tab_widget_overall.setCurrentIndex(3)
+        self.tab_widget_overall.setCurrentIndex(1)
         self.tabWidget_statistics.setCurrentIndex(0)
         self.stackedWidget_ss.setCurrentIndex(0)
         self.stackedWidget_ws.setCurrentIndex(0)
