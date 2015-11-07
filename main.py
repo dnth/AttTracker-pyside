@@ -569,6 +569,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         
+        
         cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'" % (self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
         event_id = cur.fetchall()
         
@@ -581,9 +582,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             cur.execute("SELECT chi_name, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
             attendees = cur.fetchall()
             
+            self.tableWidget_attendee.horizontalHeader().setStretchLastSection(True)
             self.tableWidget_attendee.setRowCount(len(attendees))
             self.tableWidget_attendee.setColumnCount(3)
-            self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+#             self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
             self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status", "Time In" ])
             
             for rownumber, rowvalue in enumerate(attendees):
