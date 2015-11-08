@@ -445,11 +445,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_admintab_name.clear()
         self.comboBox_admintab_status.clear()
         
-        cur.execute("SELECT chi_name, eng_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
+        cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
         namelist = cur.fetchall()
 
         for name in namelist: 
-            self.comboBox_admintab_name.addItems(["%s -- %s"% (name[0], name[1])])
+            self.comboBox_admintab_name.addItems(name)
         self.comboBox_admintab_status.addItems(["P", "B"])
         
         db.close()
@@ -488,7 +488,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         cur.execute("SELECT * FROM members_list WHERE chi_name='%s' " % (self.comboBox_profilename.currentText()))
         member_data = cur.fetchall()
         
-        print member_data
+#         print member_data
         
         if member_data is not ():
             
@@ -530,28 +530,23 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 ####################################################################################################################################################    
 
     def submit_attendance(self):
-#         self.label_admintab_dynamic_remarks.setStyleSheet("color: none")
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         cur.execute("SELECT id from members_list WHERE chi_name='%s' " % self.comboBox_admintab_name.currentText() )
         member_id = cur.fetchall()
+        
         cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'  " % (self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
         event_id = cur.fetchall()
-        print event_id
+        
         
         if event_id == ():
-#             self.label_admintab_dynamic_remarks.setText("No such event! Check event type")
-#             self.label_admintab_dynamic_remarks.setStyleSheet("color: red")
             self.statusbar.showMessage("No such event! Check event type")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         
         duplicate = cur.execute("SELECT * FROM new_attendance_table WHERE member_id=%d AND event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
+        
         if duplicate == 0:
-#             self.label_admintab_dynamic_remarks.setText( "Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
-#             self.label_admintab_dynamic_remarks.setStyleSheet("color: green")
-            
-#             self.statusbar.showMessage("Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status) VALUES ('%d', '%d', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
             db.commit()
@@ -559,9 +554,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         else:
             self.statusbar.showMessage("Duplicate entry")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-#             self.label_admintab_dynamic_remarks.setText("Duplicate entry")
-#             self.label_admintab_dynamic_remarks.setStyleSheet("color: red")
-        
+
     def delete_attendance(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
@@ -571,7 +564,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         event_id = cur.fetchall()
         
         if event_id == ():
-#             self.label_admintab_dynamic_remarks.setText("No such event! Check event type")
             self.statusbar.showMessage("No such event! Check event type")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             
@@ -579,13 +571,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         found = cur.fetchall()
         
         if found == ():
-#             self.label_admintab_dynamic_remarks.setText("No record found!")
             self.statusbar.showMessage("No record found!")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         else:
             cur.execute("DELETE FROM new_attendance_table WHERE member_id=%d AND event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
-#             self.label_admintab_dynamic_remarks.setText( "Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
-#             self.statusbar.showMessage("Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             db.commit()
             self.statusbar.showMessage("Deleted attendance for %s for %s on %s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
