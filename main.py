@@ -394,8 +394,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 cur.execute("UPDATE members_list SET rfid_num='%s' WHERE id=%d" % (rfid_num, idnum))
                 
             
-            cur.execute("UPDATE members_list SET chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', contact_num='%s' WHERE id=%d " 
-            % (chi_name,eng_name,dept,gender,membership_status,contact_num,idnum))
+            cur.execute("UPDATE members_list SET chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', contact_num='%s', passing_date='%s' WHERE id=%d " 
+            % (chi_name,eng_name,dept,gender,membership_status,contact_num,passing_date,idnum))
 
             db.commit()
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
