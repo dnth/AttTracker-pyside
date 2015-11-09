@@ -324,7 +324,8 @@ def plot_service_daily(month, year, event_type, dbhostip="127.0.0.1"):
     db.close()
     return present_list, broadcast_list, days
     
-# plot_dawn_service_daily(month=10, year=2015)
+# plot_service_daily(month=10, year=2015, event_type="Dawn Service")
+# plt.show()
 # print calc_att_by_category(year=2015, month=10, event_type="Sunday Service")
 
 # print calc_att_by_category_alldept(month=10, year=2015, event_type="Sunday Service")
