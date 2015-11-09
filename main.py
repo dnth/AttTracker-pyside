@@ -311,31 +311,31 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # color the table cell according to dept
         for rownumber, rowvalue in enumerate(memberlist):
             if rowvalue[4] == "CL":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(51,204,255))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,178,102))
             if rowvalue[4] == "BF":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(179,255,153))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,255,102))
             if rowvalue[4] == "JS":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,214,92))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(178,255,102))
             if rowvalue[4] == "YM":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(252,217,187))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
             if rowvalue[4] == "YF":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(245, 162, 46))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(153,255,204))
             if rowvalue[4] == "CM":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(251, 157, 240))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(102,255,255))
             if rowvalue[4] == "CF":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(247, 136, 190))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(102,178,255))
             if rowvalue[4] == "SSM":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(180, 247, 136))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(153,153,255))
             if rowvalue[4] == "SSF":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(241, 247, 136))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(178,102,255))
             if rowvalue[4] == "MWM":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(189, 230, 255))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,102,255))
             if rowvalue[4] == "MWF":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(54, 177, 252))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,102,178))
             if rowvalue[4] == "GL":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(176, 236, 238))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,204,204))
             if rowvalue[4] == "OS":
-                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(217, 223, 226))
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,102,102))
 
         # load combobox values in the table cell
         dept_list = ["CL","BF", "JS", "YM", "YF", "CM", "CF", "SSM", "SSF", "MWM", "MWF", "GL", "OS"]
@@ -610,9 +610,13 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
                 # highlight broadcast members for easier view
                 if rowvalue[1]=='B':
-                    self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(51,204,255))
-                    self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(51,204,255))
-                    self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(51,204,255))
+                    self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,204,255))
+                    self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,204,255))
+                    self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,204,255))
+                else:
+                    self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,255,153))
+                    self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,255,153))
+                    self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
             
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
