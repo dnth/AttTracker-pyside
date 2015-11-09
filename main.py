@@ -1052,7 +1052,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
                         db.commit()
                         print "Recorded!"
-                        print "Member:", member_data[0][2]
+                        print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date 
                         self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
                         self.label_dynamic_status.setStyleSheet("color: green")
@@ -1061,7 +1061,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     
                     else:
                         print "Record exists for:"
-                        print "Member:", member_data[0][2]
+                        print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date
                         self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
                         self.label_dynamic_status.setStyleSheet("color: red")
