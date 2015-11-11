@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sat Nov  7 19:06:11 2015
+# Created: Thu Nov 12 00:07:28 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -653,8 +653,6 @@ class Ui_LWCAttendanceTaker(object):
         self.comboBox_admintab_status = QtGui.QComboBox(self.groupBox_3)
         self.comboBox_admintab_status.setObjectName("comboBox_admintab_status")
         self.gridLayout.addWidget(self.comboBox_admintab_status, 4, 1, 1, 1)
-        spacerItem5 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridLayout.addItem(spacerItem5, 5, 1, 1, 1)
         self.horizontalLayout_16 = QtGui.QHBoxLayout()
         self.horizontalLayout_16.setObjectName("horizontalLayout_16")
         self.pushButton_delete = QtGui.QPushButton(self.groupBox_3)
@@ -664,6 +662,8 @@ class Ui_LWCAttendanceTaker(object):
         self.pushButton_submit.setObjectName("pushButton_submit")
         self.horizontalLayout_16.addWidget(self.pushButton_submit)
         self.gridLayout.addLayout(self.horizontalLayout_16, 6, 1, 1, 1)
+        spacerItem5 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridLayout.addItem(spacerItem5, 5, 1, 1, 1)
         self.horizontalLayout_11.addWidget(self.groupBox_3)
         self.groupBox_8 = QtGui.QGroupBox(self.tab_5)
         self.groupBox_8.setObjectName("groupBox_8")
@@ -705,7 +705,7 @@ class Ui_LWCAttendanceTaker(object):
         self.comboBox_eventviewatt.setObjectName("comboBox_eventviewatt")
         self.gridLayout_2.addWidget(self.comboBox_eventviewatt, 2, 1, 1, 1)
         self.calendarWidget_attview = QtGui.QCalendarWidget(self.groupBox_8)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Maximum)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.calendarWidget_attview.sizePolicy().hasHeightForWidth())

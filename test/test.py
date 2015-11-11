@@ -1,32 +1,50 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from mpldatacursor import datacursor
-from read_graph_tables import plot_service_daily
+import sys 
+from PyQt4.QtCore import *
+from PyQt4.QtGui import * 
 
-attendance = [['Frank', 'Jim', 'Anne'],
-              ['Mary Ellen', 'Callie', 'Chris'],
-              ['Janet', 'Chloe', 'Claire', 'Lisa', 'Charlie', 'Frank', 'Jim'],
-              ['James', 'Anne']]
-x = range(len(attendance))
-y = [len(item) for item in attendance]
- 
-fig, ax = plt.subplots()
-# ax.bar(x, y, align='center', color='lightblue')
-# ax.margins(0.05)
-# ax.set_ylim(bottom=0)
-# 
-# Using a closure to access data. Ideally you'd use a "functor"-style class.
-def formatter(**kwargs):
-    dist = abs(np.array(x) - kwargs['x'])
-    i = dist.argmin()
-    return '\n'.join(attendance[i])
-# 
-# datacursor(hover=True, formatter=formatter)
+class MoviePlayer(QWidget): 
+    def __init__(self, gif, parent=None): 
+        super(MoviePlayer, self).__init__(parent)
+
+        self.setGeometry(200, 200, 400, 400)
+        self.setWindowTitle("QMovie to show animated gif")
+
+        self.movie_screen = QLabel()
+        self.movie_screen.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)        
+        self.movie_screen.setAlignment(Qt.AlignCenter) 
+
+        btn_start = QPushButton("Start Animation")
+        btn_start.clicked.connect(self.start) 
+
+        btn_stop = QPushButton("Stop Animation")
+        btn_stop.clicked.connect(self.stop) 
+
+        main_layout = QVBoxLayout() 
+        main_layout.addWidget(self.movie_screen)
+        main_layout.addWidget(btn_start) 
+        main_layout.addWidget(btn_stop)
+        self.setLayout(main_layout) 
+
+        self.movie = QMovie(gif, QByteArray(), self) 
+        self.movie.setCacheMode(QMovie.CacheAll) 
+        self.movie.setSpeed(100) 
+        self.movie_screen.setMovie(self.movie) 
 
 
-daily_present_list, daily_broadcast_list, days = plot_service_daily(month=11, year=2015, event_type="Dawn Service")
-daily_present_rects = ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
-daily_braodcast_rects = ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
-datacursor(daily_present_rects, hover=False,formatter=formatter)
-datacursor(daily_braodcast_rects, hover=False,formatter=formatter)
-plt.show()
+    def start(self):
+        """
+        Start animation
+        """
+        self.movie.start()
+
+    def stop(self):
+        """
+        Stop the animation
+        """
+        self.movie.stop()
+
+
+app = QApplication(sys.argv) 
+player = MoviePlayer("/home/camaro/Desktop/giphy.gif") 
+player.show() 
+sys.exit(app.exec_())
