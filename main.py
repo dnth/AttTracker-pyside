@@ -1030,7 +1030,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 member_id = member_data[0][0] 
                 
                 print "Name: %s" % member_data[0][2].encode('utf-8')
-                print "Event:", self.event_type 
+                print "Event ID", self.event_id
                 
                 self.label_dynamic_name.setText(member_data[0][2])
                 
@@ -1048,7 +1048,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
                  
                 self.updateEventStatus()
-                print "Event ID", self.event_id
+                
                 self.label_dynamic_status.setStyleSheet("color: black")
                 
                 if self.event_id is not None:
