@@ -16,9 +16,10 @@ import MySQLdb as mdb
 import datetime
 from datetime import date, time
 from time import strftime
+import time as t
 
-# print sys.getdefaultencoding()
-# print sys.getfilesystemencoding()
+print "Start Time:",datetime.datetime.now()
+
 
 class Login(QtGui.QDialog):
     def __init__(self):
@@ -1018,7 +1019,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         if len(self.data) > 11:
             print "ID detected"
             read_id = self.data[:12]
-            print read_id
+            print "Detected ID:",read_id
+            print "Time:", datetime.datetime.now()
 
             member_data = self.search_database_for_member_id(read_id)
             
@@ -1028,6 +1030,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 member_id = member_data[0][0] 
                 
                 print "Name: %s" % member_data[0][2].encode('utf-8')
+                print "Event:", self.event_type 
                 
                 self.label_dynamic_name.setText(member_data[0][2])
                 
