@@ -505,13 +505,14 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             if member_data[0][7] is None:
                 self.lineEdit_profiledob.setText("Null")
             else: 
-                self.lineEdit_profiledob.setText(member_data[0][7])
+                self.lineEdit_profiledob.setText(str(member_data[0][7]))
             self.lineEdit_profiledob.setDisabled(True)
             
             if member_data[0][8] is None:
                 self.lineEdit_profilepassing.setText("Null")
             else:
-                self.lineEdit_profilepassing.setText(member_data[0][8])
+                print type(member_data[0][0])
+                self.lineEdit_profilepassing.setText(str(member_data[0][8]))
             self.lineEdit_profilepassing.setDisabled(True)
             
             if member_data[0][9] is None:
