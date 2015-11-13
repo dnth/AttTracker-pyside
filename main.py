@@ -1028,12 +1028,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             member_data = self.search_database_for_member_id(read_id)
             
             if member_data:
-                print "Success"
+#                 print "Success"
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
                 
                 print "Name: %s" % member_data[0][2].encode('utf-8')
-                print "Event ID", self.event_id
+#                 print "Event ID", self.event_id
                 
                 self.label_dynamic_name.setText(member_data[0][2])
                 
@@ -1059,7 +1059,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     if cur.fetchall() == ():
                         cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
                         db.commit()
-                        print "Recorded!"
+                        print "*****Recorded!*****"
                         print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date 
                         self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
