@@ -52,6 +52,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
         self.setWindowIcon(QtGui.QIcon('icon/python.jpg'))
+        self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
 
         self.actionQuit.triggered.connect(self.close_application)
          
@@ -87,6 +88,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.pushButton_submit.clicked.connect(self.submit_attendance)
         self.pushButton_delete.clicked.connect(self.delete_attendance)
         self.pushButton_viewatt.clicked.connect(self.viewAttendance)
+        self.comboBox_admintab_name.currentIndexChanged.connect(self.load_att_marking_pic)
         
         
         self.comboBox_admintab_dept.currentIndexChanged.connect(self.load_admin_name_status_combobox)
@@ -530,9 +532,14 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         self.label_personalpic.setPixmap(QtGui.QPixmap("pics/%s.jpg" % self.comboBox_profilename.currentText()).scaledToHeight(200) )
             else:
                 self.label_personalpic.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
-        
+    
         
 ####################################################################################################################################################    
+    def load_att_marking_pic(self):
+        if os.path.exists("pics/%s.jpg" % self.comboBox_admintab_name.currentText()):
+                        self.label_attmarkingpic.setPixmap(QtGui.QPixmap("pics/%s.jpg" % self.comboBox_admintab_name.currentText()).scaledToHeight(160) )
+        else:
+            self.label_attmarkingpic.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
 
     def submit_attendance(self):
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
