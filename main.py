@@ -158,12 +158,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         
-        cur.execute("INSERT INTO members_list (chi_name, eng_name, dept, gender, membership_status, dob, passing_date, contact_num) VALUES ('%s', '%s', '%s', '%s', 'Active', '%s', '%s', '%s') " 
-                    % (self.nameLineEdit.text(), self.englishNameLineEdit.text(), self.comboBox_addmemberdept.currentText(), self.comboBox_addmembergender.currentText(), self.calendarWidget_newmember_dob.selectedDate().toString("yyyy-MM-dd"), self.calendarWidget_newmember_passing.selectedDate().toString("yyyy-MM-dd"), self.contactNum_lineEdit.text() ))
-        db.commit()
-        
-        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-        self.statusbar.showMessage("New member added!")
+        if self.nameLineEdit.text(): 
+            cur.execute("INSERT INTO members_list (chi_name, eng_name, dept, gender, membership_status, dob, passing_date, contact_num) VALUES ('%s', '%s', '%s', '%s', 'Active', '%s', '%s', '%s') " 
+                        % (self.nameLineEdit.text(), self.englishNameLineEdit.text(), self.comboBox_addmemberdept.currentText(), self.comboBox_addmembergender.currentText(), self.calendarWidget_newmember_dob.selectedDate().toString("yyyy-MM-dd"), self.calendarWidget_newmember_passing.selectedDate().toString("yyyy-MM-dd"), self.contactNum_lineEdit.text() ))
+            db.commit()
+             
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("New member added!")
+        else:
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Name cant be empty!")
 
 
 ####################################################################################################################################################    
@@ -512,7 +516,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             if member_data[0][8] is None:
                 self.lineEdit_profilepassing.setText("Null")
             else:
-                print type(member_data[0][0])
                 self.lineEdit_profilepassing.setText(str(member_data[0][8]))
             self.lineEdit_profilepassing.setDisabled(True)
             
