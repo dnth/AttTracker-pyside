@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Thu Nov 12 00:07:28 2015
+# Created: Fri Nov 13 23:28:40 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -829,6 +829,9 @@ class Ui_LWCAttendanceTaker(object):
         self.contactNum_lineEdit = QtGui.QLineEdit(self.formLayoutWidget_2)
         self.contactNum_lineEdit.setObjectName("contactNum_lineEdit")
         self.formLayout_4.setWidget(4, QtGui.QFormLayout.FieldRole, self.contactNum_lineEdit)
+        self.pushButton_addmember = QtGui.QPushButton(self.formLayoutWidget_2)
+        self.pushButton_addmember.setObjectName("pushButton_addmember")
+        self.formLayout_4.setWidget(5, QtGui.QFormLayout.FieldRole, self.pushButton_addmember)
         self.formLayoutWidget = QtGui.QWidget(self.groupBox_6)
         self.formLayoutWidget.setGeometry(QtCore.QRect(330, 18, 521, 361))
         self.formLayoutWidget.setObjectName("formLayoutWidget")
@@ -872,9 +875,6 @@ class Ui_LWCAttendanceTaker(object):
         self.calendarWidget_newmember_passing.setVerticalHeaderFormat(QtGui.QCalendarWidget.NoVerticalHeader)
         self.calendarWidget_newmember_passing.setObjectName("calendarWidget_newmember_passing")
         self.formLayout_6.setWidget(1, QtGui.QFormLayout.FieldRole, self.calendarWidget_newmember_passing)
-        self.pushButton_addmember = QtGui.QPushButton(self.tab_4)
-        self.pushButton_addmember.setGeometry(QtCore.QRect(0, 560, 171, 27))
-        self.pushButton_addmember.setObjectName("pushButton_addmember")
         self.tabWidget_adminmarking.addTab(self.tab_4, "")
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -1082,9 +1082,9 @@ class Ui_LWCAttendanceTaker(object):
         self.genderLabel.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Gender", None, QtGui.QApplication.UnicodeUTF8))
         self.deptLabel.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Dept", None, QtGui.QApplication.UnicodeUTF8))
         self.label_7.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Contact Num", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton_addmember.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Add new member!", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Date of Birth", None, QtGui.QApplication.UnicodeUTF8))
         self.label_6.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Passing Date", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_addmember.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Add new member!", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab_4), QtGui.QApplication.translate("LWCAttendanceTaker", "Add New Members", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox_7.setTitle(QtGui.QApplication.translate("LWCAttendanceTaker", "Profile", None, QtGui.QApplication.UnicodeUTF8))
         self.nameLabel_2.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Name", None, QtGui.QApplication.UnicodeUTF8))

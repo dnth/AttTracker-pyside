@@ -1475,6 +1475,13 @@
               <item row="4" column="1">
                <widget class="QLineEdit" name="contactNum_lineEdit"/>
               </item>
+              <item row="5" column="1">
+               <widget class="QPushButton" name="pushButton_addmember">
+                <property name="text">
+                 <string>Add new member!</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
             <widget class="QWidget" name="formLayoutWidget">
@@ -1565,19 +1572,6 @@
               </item>
              </layout>
             </widget>
-           </widget>
-           <widget class="QPushButton" name="pushButton_addmember">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>560</y>
-              <width>171</width>
-              <height>27</height>
-             </rect>
-            </property>
-            <property name="text">
-             <string>Add new member!</string>
-            </property>
            </widget>
           </widget>
           <widget class="QWidget" name="tab_2">
