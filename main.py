@@ -51,7 +51,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        self.setWindowIcon(QtGui.QIcon('icon/python.jpg'))
+        self.setWindowIcon(QtGui.QIcon('icon/disp_icon.png'))
         self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
 
         self.actionQuit.triggered.connect(self.close_application)
@@ -138,6 +138,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
          
     def close_application(self):
         print "Thanks for using me!"
+        print "End Time:",datetime.datetime.now()
         sys.exit()
     
     def load_serial_port_2(self):
