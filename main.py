@@ -128,7 +128,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         # view events
         self.pushButton_viewnewevent.clicked.connect(self.viewEvents)
-        self.comboBox_viewevent.addItem("All Events")
+#         self.comboBox_viewevent.addItem("All Events")
         
         # add events
         self.comboBox_addnewevent.addItem("Others")
@@ -186,51 +186,29 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         
-        if self.comboBox_viewevent.currentText() == "All Events":
-            cur.execute("SELECT * FROM event_test WHERE event_date='%s' " % (self.calendarWidget_viewnewevent.selectedDate().toString("yyyy-MM-dd")))
-            events = cur.fetchall()
-            if events == ():
-                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-                self.statusbar.showMessage("No such event. Check event details!")
-            else:
-                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-                self.statusbar.showMessage("Event loaded!")
-    #             for event in events:
-    #                 print event
-                
-                self.tableWidget_viewevent.horizontalHeader().setStretchLastSection(True)
-                self.tableWidget_viewevent.setRowCount(len(events))
-                self.tableWidget_viewevent.setColumnCount(3)
-                self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-                self.tableWidget_viewevent.setHorizontalHeaderLabels(["Type", "Date", "Name" ])
-                
-                for rownumber, rowvalue in enumerate(events):
-                    self.tableWidget_viewevent.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
-                    self.tableWidget_viewevent.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
-                    self.tableWidget_viewevent.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
-        
+        cur.execute("SELECT * FROM event_test WHERE event_date='%s' " % (self.calendarWidget_viewnewevent.selectedDate().toString("yyyy-MM-dd")))
+        events = cur.fetchall()
+        if events == ():
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("No such event. Check event details!")
         else:
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.comboBox_viewevent.currentText(), self.calendarWidget_viewnewevent.selectedDate().toString("yyyy-MM-dd")))
-            events = cur.fetchall()
-            if events == ():
-                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-                self.statusbar.showMessage("No such event. Check event details!")
-            else:
-                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-                self.statusbar.showMessage("Event loaded!")
-    #             for event in events:
-    #                 print event
-                
-                self.tableWidget_viewevent.horizontalHeader().setStretchLastSection(True)
-                self.tableWidget_viewevent.setRowCount(len(events))
-                self.tableWidget_viewevent.setColumnCount(3)
-                self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-                self.tableWidget_viewevent.setHorizontalHeaderLabels(["Type", "Date", "Name" ])
-                
-                for rownumber, rowvalue in enumerate(events):
-                    self.tableWidget_viewevent.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
-                    self.tableWidget_viewevent.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
-                    self.tableWidget_viewevent.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Event loaded!")
+
+            
+            self.tableWidget_viewevent.horizontalHeader().setStretchLastSection(True)
+            self.tableWidget_viewevent.setRowCount(len(events))
+            self.tableWidget_viewevent.setColumnCount(3)
+            self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+            self.tableWidget_viewevent.setHorizontalHeaderLabels(["Type", "Date", "Name" ])
+            
+            for rownumber, rowvalue in enumerate(events):
+                self.tableWidget_viewevent.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
+                self.tableWidget_viewevent.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
+                self.tableWidget_viewevent.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
+        
+        
+
         db.close()
             
 ####################################################################################################################################################    
@@ -526,7 +504,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 #             print event
             self.comboBox_admintab_event.addItems(event)
             self.comboBox_eventviewatt.addItems(event)
-            self.comboBox_viewevent.addItems(event)
+#             self.comboBox_viewevent.addItems(event)
             self.comboBox_addnewevent.addItems(event)
         db.close()
             
