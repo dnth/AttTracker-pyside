@@ -1683,7 +1683,7 @@
                   </widget>
                  </item>
                  <item row="2" column="1">
-                  <widget class="QCalendarWidget" name="calendarWidget_2">
+                  <widget class="QCalendarWidget" name="calendarWidget_addevent">
                    <property name="gridVisible">
                     <bool>true</bool>
                    </property>
@@ -1737,8 +1737,6 @@
                 </layout>
                </item>
               </layout>
-              <zorder>formLayoutWidget_4</zorder>
-              <zorder>formLayoutWidget_4</zorder>
              </widget>
             </item>
             <item>
@@ -2063,6 +2061,7 @@
      <string>File</string>
     </property>
     <addaction name="actionConnect"/>
+    <addaction name="actionConnect_to_home"/>
     <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFlie"/>
@@ -2076,6 +2075,11 @@
   <action name="actionConnect">
    <property name="text">
     <string>Connect</string>
+   </property>
+  </action>
+  <action name="actionConnect_to_home">
+   <property name="text">
+    <string>Connect to home</string>
    </property>
   </action>
  </widget>

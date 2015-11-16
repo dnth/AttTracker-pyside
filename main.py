@@ -55,13 +55,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
 
         self.actionQuit.triggered.connect(self.close_application)
-         
         self.actionQuit.setStatusTip("Leave the application")
         self.actionQuit.setShortcut("Ctrl+Shift+Q")
          
         self.actionConnect.triggered.connect(self.connect_serial_port)
         self.actionConnect.setStatusTip("Connect to serial port")
         self.actionConnect.setShortcut("Ctrl+Shift+C")
+        
+        self.actionConnect_to_home.triggered.connect(self.connecttohome)
+        self.actionConnect_to_home.setStatusTip("Connect to home server")
+        self.actionConnect_to_home.setShortcut("Ctrl+Shift+X")
         
         self.home()
         
@@ -127,6 +130,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.pushButton_viewnewevent.clicked.connect(self.viewEvents)
         self.comboBox_viewevent.addItem("All Events")
         
+        # add events
+        self.comboBox_addnewevent.addItem("Others")
+        self.pushButton_addnewevent.clicked.connect(self.addevents)
+        
 
          
     def close_application(self):
@@ -161,6 +168,20 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 
 
 ####################################################################################################################################################    
+    def addevents(self):
+        db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
+        cur = db.cursor()
+        
+        # search for duplicate, if no duplicate, add events, else prompt user
+         
+        cur.execute("INSERT INTO event_test VALUES (NULL, '%s', '%s', '%s')" % (str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        db.commit()
+        db.close()
+
+        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+        self.statusbar.showMessage("Event added! Details: %s, @ %s, %s" %(str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        
+    
     def viewEvents(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
@@ -210,6 +231,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     self.tableWidget_viewevent.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
                     self.tableWidget_viewevent.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
                     self.tableWidget_viewevent.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
+        db.close()
             
 ####################################################################################################################################################    
 
@@ -501,10 +523,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         cur.execute("SELECT event_type FROM event_test GROUP BY event_type")
         eventlist = cur.fetchall()
         for event in eventlist:
-            print event
+#             print event
             self.comboBox_admintab_event.addItems(event)
             self.comboBox_eventviewatt.addItems(event)
             self.comboBox_viewevent.addItems(event)
+            self.comboBox_addnewevent.addItems(event)
         db.close()
             
     def load_admin_name_status_combobox(self):

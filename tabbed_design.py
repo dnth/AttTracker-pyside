@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Mon Nov 16 00:14:06 2015
+# Created: Mon Nov 16 12:12:55 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -937,12 +937,12 @@ class Ui_LWCAttendanceTaker(object):
         self.label_14.setFont(font)
         self.label_14.setObjectName("label_14")
         self.formLayout_5.setWidget(2, QtGui.QFormLayout.LabelRole, self.label_14)
-        self.calendarWidget_2 = QtGui.QCalendarWidget(self.groupBox_9)
-        self.calendarWidget_2.setGridVisible(True)
-        self.calendarWidget_2.setVerticalHeaderFormat(QtGui.QCalendarWidget.NoVerticalHeader)
-        self.calendarWidget_2.setNavigationBarVisible(True)
-        self.calendarWidget_2.setObjectName("calendarWidget_2")
-        self.formLayout_5.setWidget(2, QtGui.QFormLayout.FieldRole, self.calendarWidget_2)
+        self.calendarWidget_addevent = QtGui.QCalendarWidget(self.groupBox_9)
+        self.calendarWidget_addevent.setGridVisible(True)
+        self.calendarWidget_addevent.setVerticalHeaderFormat(QtGui.QCalendarWidget.NoVerticalHeader)
+        self.calendarWidget_addevent.setNavigationBarVisible(True)
+        self.calendarWidget_addevent.setObjectName("calendarWidget_addevent")
+        self.formLayout_5.setWidget(2, QtGui.QFormLayout.FieldRole, self.calendarWidget_addevent)
         self.label_18 = QtGui.QLabel(self.groupBox_9)
         font = QtGui.QFont()
         font.setWeight(75)
@@ -1144,7 +1144,10 @@ class Ui_LWCAttendanceTaker(object):
         self.actionQuit.setObjectName("actionQuit")
         self.actionConnect = QtGui.QAction(LWCAttendanceTaker)
         self.actionConnect.setObjectName("actionConnect")
+        self.actionConnect_to_home = QtGui.QAction(LWCAttendanceTaker)
+        self.actionConnect_to_home.setObjectName("actionConnect_to_home")
         self.menuFlie.addAction(self.actionConnect)
+        self.menuFlie.addAction(self.actionConnect_to_home)
         self.menuFlie.addAction(self.actionQuit)
         self.menubar.addAction(self.menuFlie.menuAction())
 
@@ -1253,5 +1256,6 @@ class Ui_LWCAttendanceTaker(object):
         self.menuFlie.setTitle(QtGui.QApplication.translate("LWCAttendanceTaker", "File", None, QtGui.QApplication.UnicodeUTF8))
         self.actionQuit.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Quit", None, QtGui.QApplication.UnicodeUTF8))
         self.actionConnect.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Connect", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionConnect_to_home.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Connect to home", None, QtGui.QApplication.UnicodeUTF8))
 
 from mplwidget import MplWidget
