@@ -173,14 +173,21 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         cur = db.cursor()
         
         # search for duplicate, if no duplicate, add events, else prompt user
-         
-        cur.execute("INSERT INTO event_test VALUES (NULL, '%s', '%s', '%s')" % (str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
-        db.commit()
-        db.close()
-
-        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-        self.statusbar.showMessage("Event added! Details: %s, @ %s, %s" %(str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        # currently only support 1 extra event per day due to restriction in the mysql table
+        cur.execute("SELECT * FROM event_test WHERE event_name='%s' AND event_date='%s' AND event_type='%s' " % (str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        duplicate = cur.fetchall()
         
+        if duplicate == (): 
+            cur.execute("INSERT INTO event_test VALUES (NULL, '%s', '%s', '%s')" % (str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+            db.commit()
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Event added! Details: %s, @ %s, %s" %(str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        
+        else:
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Duplicate found! Create different event")
+        
+        db.close()
     
     def viewEvents(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
