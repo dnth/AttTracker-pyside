@@ -129,10 +129,15 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # view events
         self.pushButton_viewnewevent.clicked.connect(self.viewEvents)
 #         self.comboBox_viewevent.addItem("All Events")
-        
+
         # add events
         self.comboBox_addnewevent.addItem("Others")
         self.pushButton_addnewevent.clicked.connect(self.addevents)
+        
+        
+        # Enable this line for reader pc
+        self.pushButton_connect.click()
+        self.pushButton_connecttohome.click()
         
 
          

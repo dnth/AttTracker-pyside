@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Mon Nov 16 18:53:50 2015
+# Created: Sun Nov 29 01:05:14 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -1143,7 +1143,7 @@ class Ui_LWCAttendanceTaker(object):
         self.menubar.addAction(self.menuFlie.menuAction())
 
         self.retranslateUi(LWCAttendanceTaker)
-        self.tab_widget_overall.setCurrentIndex(3)
+        self.tab_widget_overall.setCurrentIndex(1)
         self.tabWidget_statistics.setCurrentIndex(0)
         self.stackedWidget_ss.setCurrentIndex(0)
         self.stackedWidget_ws.setCurrentIndex(0)
