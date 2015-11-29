@@ -2,6 +2,7 @@ import sys
 import os
 from PySide import QtGui, QtCore
 import tabbed_design
+import login_window
 
 from importserial import load_serial_ports
 import serial
@@ -20,26 +21,21 @@ import time as t
 
 print "Start Time:",datetime.datetime.now()
 
-
-class Login(QtGui.QDialog):
-    def __init__(self):
-        QtGui.QDialog.__init__(self)
-        self.textName = QtGui.QLineEdit(self)
-        self.textPass = QtGui.QLineEdit(self)
-        self.buttonLogin = QtGui.QPushButton('Login', self)
-        self.buttonLogin.clicked.connect(self.handleLogin)
-        layout = QtGui.QVBoxLayout(self)
-        layout.addWidget(self.textName)
-        layout.addWidget(self.textPass)
-        layout.addWidget(self.buttonLogin)
-
-    def handleLogin(self):
-        if (self.textName.text() == 'foo' and
-            self.textPass.text() == 'bar'):
-            self.accept()
-        else:
-            QtGui.QMessageBox.warning(
-                self, 'Error', 'Bad user or password')
+# class Login(QtGui.QDialog, login_window.Ui_Dialog):
+#     def __init__(self):
+# #         QtGui.QDialog.__init__(self)
+#         super(self.__class__, self).__init__()
+#         self.setupUi(self)
+#         self.pushButton_login.clicked.connect(self.handleLogin)
+#         
+#     def handleLogin(self):
+#         if (self.lineEdit_username.text() == 'lwcadmin' and self.lineEdit_password.text() == 'lwcadmin'):
+#             self.accept()
+#         else:
+#             QtGui.QMessageBox.warning(
+#                 self, 'Error', 'Bad user or password')
+        
+        
             
 
 class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
@@ -67,6 +63,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.actionConnect_to_home.setShortcut("Ctrl+Shift+X")
         
         self.home()
+        
+        self.tab_widget_overall.setTabEnabled(0, False)
+        self.tab_widget_overall.setTabEnabled(2, False)
+        self.tab_widget_overall.setTabEnabled(3, False)
         
         
     def home(self):
@@ -1177,12 +1177,20 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
         
 def main():
+
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
-    
-    form = AttTracker()                 # We set the form to be our ExampleApp (design)
+    form = AttTracker() 
     form.show()                         # Show the form
-    app.exec_()                         # and execute the app
+    app.exec_()                         
 
+#     if Login().exec_() == QtGui.QDialog.Accepted:
+#         form = AttTracker() 
+#         form.show()                         # Show the form
+#         app.exec_()                         # and execute the app
+            
 
+        
+
+    
 if __name__ == '__main__':              # if we're running file directly and not importing it
     main()    
