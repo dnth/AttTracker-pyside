@@ -21,19 +21,27 @@ import time as t
 
 print "Start Time:",datetime.datetime.now()
 
-# class Login(QtGui.QDialog, login_window.Ui_Dialog):
-#     def __init__(self):
-# #         QtGui.QDialog.__init__(self)
-#         super(self.__class__, self).__init__()
-#         self.setupUi(self)
-#         self.pushButton_login.clicked.connect(self.handleLogin)
-#         
-#     def handleLogin(self):
-#         if (self.lineEdit_username.text() == 'lwcadmin' and self.lineEdit_password.text() == 'lwcadmin'):
-#             self.accept()
-#         else:
-#             QtGui.QMessageBox.warning(
-#                 self, 'Error', 'Bad user or password')
+isAdmin = False
+
+class Login(QtGui.QDialog, login_window.Ui_Dialog):
+    def __init__(self):
+#         QtGui.QDialog.__init__(self)
+        super(self.__class__, self).__init__()
+        self.setupUi(self)
+        self.pushButton_login.clicked.connect(self.handleLogin)
+         
+    def handleLogin(self):
+        if (self.lineEdit_username.text() == 'lwcadmin' and self.lineEdit_password.text() == 'lwcadmin'):
+            self.accept()
+            global isAdmin
+            isAdmin = True
+            
+        elif (self.lineEdit_username.text() == 'lwcuser' and self.lineEdit_password.text() == 'lwcuser'):
+            self.accept()
+            
+        else:
+            QtGui.QMessageBox.warning(
+                self, 'Error', 'Bad user or password')
         
         
             
@@ -64,9 +72,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         self.home()
         
-        self.tab_widget_overall.setTabEnabled(0, False)
-        self.tab_widget_overall.setTabEnabled(2, False)
-        self.tab_widget_overall.setTabEnabled(3, False)
+
+        if not isAdmin:
+            print "Logged in as user"
+            self.tab_widget_overall.setTabEnabled(0, False)
+            self.tab_widget_overall.setTabEnabled(2, False)
+            self.tab_widget_overall.setTabEnabled(3, False)
         
         
     def home(self):
@@ -635,7 +646,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         if duplicate == 0:
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-            cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status) VALUES ('%d', '%d', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
+            cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', '%s', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText(), datetime.datetime.now()))
             db.commit()
             self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=%s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd"), self.comboBox_admintab_status.currentText()))
         else:
@@ -1179,15 +1190,15 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 def main():
 
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
-    form = AttTracker() 
-    form.show()                         # Show the form
-    app.exec_()                         
+#     form = AttTracker() 
+#     form.show()                         # Show the form
+#     app.exec_()                         
 
-#     if Login().exec_() == QtGui.QDialog.Accepted:
-#         form = AttTracker() 
-#         form.show()                         # Show the form
-#         app.exec_()                         # and execute the app
-            
+    if Login().exec_() == QtGui.QDialog.Accepted:
+        form = AttTracker() 
+        form.show()                         # Show the form
+        app.exec_()                         # and execute the app
+
 
         
 
