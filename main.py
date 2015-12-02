@@ -70,6 +70,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.actionConnect_to_home.setStatusTip("Connect to home server")
         self.actionConnect_to_home.setShortcut("Ctrl+Shift+X")
         
+        # set max date for attendnace marking
+        self.calendarWidget.setMaximumDate(datetime.datetime.now())
+        
         self.home()
         
 
