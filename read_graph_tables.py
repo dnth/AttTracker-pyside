@@ -7,6 +7,10 @@ import collections
 from calendar import monthrange, calendar
 
 
+import calendar
+from datetime import date, timedelta as td
+
+
 def calc_num_all_dept(verbose=False, dbhostip="127.0.0.1"):
     '''
     Calculates the number of members in each dept 
@@ -304,6 +308,12 @@ def plot_service_daily(month, year, event_type, dbhostip="127.0.0.1"):
     cur = db.cursor()
     days = range(1,monthrange(year, month)[1]+1) 
 #     print days
+
+    d1 = date(year, month, 1)
+    d2 = date(year, month, calendar.monthrange(year, month)[1])# get last day of the month
+    delta = d2 - d1
+    date_list = [d1+td(days=i) for i in range(delta.days+1)]
+#     print date_list
     
     present_list = []
     for day in days:
@@ -322,7 +332,7 @@ def plot_service_daily(month, year, event_type, dbhostip="127.0.0.1"):
 #     print present_list
 #     print broadcast_list
     db.close()
-    return present_list, broadcast_list, days
+    return present_list, broadcast_list, days, date_list
     
 # plot_service_daily(month=10, year=2015, event_type="Dawn Service")
 # plt.show()

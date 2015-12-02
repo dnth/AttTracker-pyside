@@ -877,7 +877,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_sundayservicedeptstats.canvas.draw()
         
         self.mpl_sundayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_sundayservice_daily.canvas.ax.grid(True)
@@ -931,7 +931,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_weddayservicedeptstats.canvas.draw() 
         
         self.mpl_wednesdayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_wednesdayservice_daily.canvas.ax.grid(True)
@@ -985,7 +985,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_fridayservicedeptstats.canvas.draw()
         
         self.mpl_fridayprayer_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_fridayprayer_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_fridayprayer_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_fridayprayer_daily.canvas.ax.grid(True)
@@ -1040,15 +1040,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         
         self.mpl_dawnservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_dawnservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_dawnservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_dawnservice_daily.canvas.ax.grid(True)
+#         self.mpl_dawnservice_daily.canvas.ax.set_xticklabels(date_list, rotation=45)
         
         self.mpl_dawnservice_daily.canvas.ax.set_ylabel("No of members")
         self.mpl_dawnservice_daily.canvas.ax.set_xlabel("Day")
         self.mpl_dawnservice_daily.canvas.ax.set_xlim([0,days[-1]+1])
-        self.mpl_dawnservice_daily.canvas.ax.legend(loc='lower right')
+        self.mpl_dawnservice_daily.canvas.ax.legend(loc='upper right')
 #         self.mpl_dawnservice_daily.canvas.ax.set_title("Daily Dawn Service Attendance, [Month:%s Year:%s]" % (int(self.comboBox_monthselector.currentText()), int(self.comboBox_yearselector.currentText())))
         self.mpl_dawnservice_daily.canvas.ax.set_title("Attendance Distribution %s, %d" % (calendar.month_abbr[int(self.comboBox_monthselector.currentText())], int(self.comboBox_yearselector.currentText())), y=1.05)
         import matplotlib.ticker as plticker

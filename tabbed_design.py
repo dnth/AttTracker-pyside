@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sun Nov 29 01:05:14 2015
+# Created: Wed Dec  2 17:21:24 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -1149,7 +1149,7 @@ class Ui_LWCAttendanceTaker(object):
         self.stackedWidget_ws.setCurrentIndex(0)
         self.stackedWidget_fpm.setCurrentIndex(0)
         self.stackedWidget_ds.setCurrentIndex(0)
-        self.tabWidget_adminmarking.setCurrentIndex(4)
+        self.tabWidget_adminmarking.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(LWCAttendanceTaker)
 
     def retranslateUi(self, LWCAttendanceTaker):
