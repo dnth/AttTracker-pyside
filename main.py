@@ -1,3 +1,4 @@
+#!/home/camaro-workstation/anaconda/bin/python
 import sys
 import os
 from PySide import QtGui, QtCore
@@ -29,6 +30,11 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         super(self.__class__, self).__init__()
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
+        
+        self.lineEdit_username.setText("lwcuser")
+        self.lineEdit_password.setText("lwcuser")
+        
+        self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
          
     def handleLogin(self):
         if (self.lineEdit_username.text() == 'lwcadmin' and self.lineEdit_password.text() == 'lwcadmin'):
@@ -72,7 +78,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         # set max date for attendnace marking
         self.calendarWidget.setMaximumDate(datetime.datetime.now())
-        
         self.home()
         
 
