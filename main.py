@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/home/camaro/anaconda/bin/python
 import sys
 import os
 from PySide import QtGui, QtCore
@@ -1211,6 +1211,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 def main():
 
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+    app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
 #     form = AttTracker() 
 #     form.show()                         # Show the form
 #     app.exec_()                         

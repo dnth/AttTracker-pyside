@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 import sys
 import os
 from PySide import QtGui, QtCore
 import tabbed_design
+import login_window
 
 from importserial import load_serial_ports
 import serial
@@ -16,30 +18,51 @@ import MySQLdb as mdb
 import datetime
 from datetime import date, time
 from time import strftime
+import time as t
 
-print sys.getdefaultencoding()
-print sys.getfilesystemencoding()
+print "Start Time:",datetime.datetime.now()
 
-class Login(QtGui.QDialog):
+isAdmin = False
+
+class Login(QtGui.QDialog, login_window.Ui_Dialog):
     def __init__(self):
-        QtGui.QDialog.__init__(self)
-        self.textName = QtGui.QLineEdit(self)
-        self.textPass = QtGui.QLineEdit(self)
-        self.buttonLogin = QtGui.QPushButton('Login', self)
-        self.buttonLogin.clicked.connect(self.handleLogin)
-        layout = QtGui.QVBoxLayout(self)
-        layout.addWidget(self.textName)
-        layout.addWidget(self.textPass)
-        layout.addWidget(self.buttonLogin)
-
+#         QtGui.QDialog.__init__(self)
+        super(self.__class__, self).__init__()
+        self.setupUi(self)
+        self.pushButton_login.clicked.connect(self.handleLogin)
+        
+        self.lineEdit_username.setText("lwcuser")
+        self.lineEdit_password.setText("lwcuser")
+        
+        self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
+        self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
+        
+#         self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
+        
+        self.count = 11
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.countdown)
+        self.timer.start(1000)
+         
     def handleLogin(self):
-        if (self.textName.text() == 'foo' and
-            self.textPass.text() == 'bar'):
+        if (self.lineEdit_username.text() == 'lwcadmin' and self.lineEdit_password.text() == 'lwcadmin'):
             self.accept()
+            global isAdmin
+            isAdmin = True
+            
+        elif (self.lineEdit_username.text() == 'lwcuser' and self.lineEdit_password.text() == 'lwcuser'):
+            self.accept()
+            
         else:
             QtGui.QMessageBox.warning(
                 self, 'Error', 'Bad user or password')
-            
+        
+    def countdown(self):
+        self.count-=1 
+#         print self.count
+        self.loginlabel.setText("Login as lwcuser in "+str(self.count)+" seconds")
+        if self.count <= 0:
+            self.pushButton_login.click()
 
 class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     def __init__(self):
@@ -50,10 +73,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        self.setWindowIcon(QtGui.QIcon('icon/python.jpg'))
+        self.setWindowIcon(QtGui.QIcon('icon/disp_icon.png'))
+        self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
 
         self.actionQuit.triggered.connect(self.close_application)
-         
         self.actionQuit.setStatusTip("Leave the application")
         self.actionQuit.setShortcut("Ctrl+Shift+Q")
          
@@ -61,12 +84,25 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.actionConnect.setStatusTip("Connect to serial port")
         self.actionConnect.setShortcut("Ctrl+Shift+C")
         
+        self.actionConnect_to_home.triggered.connect(self.connecttohome)
+        self.actionConnect_to_home.setStatusTip("Connect to home server")
+        self.actionConnect_to_home.setShortcut("Ctrl+Shift+X")
+        
+        # set max date for attendnace marking
+        self.calendarWidget.setMaximumDate(datetime.datetime.now())
         self.home()
+        
+
+        if not isAdmin:
+            print "Logged in as lwcuser"
+            self.tab_widget_overall.setTabEnabled(0, False)
+            self.tab_widget_overall.setTabEnabled(2, False)
+            self.tab_widget_overall.setTabEnabled(3, False)
         
         
     def home(self):
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-        self.statusbar.showMessage("No database connected. Enter the IP address of the database server")
+        self.statusbar.showMessage("Connect to the RFID reader and database to start")
         
 #         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         self.pushButton_quit.clicked.connect(self.close_application)
@@ -82,10 +118,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # serial port stuff
         self.load_serial_port_2()
         
-        # attendance marking stuff
+        # attendance marking and view stuff
         self.pushButton_submit.clicked.connect(self.submit_attendance)
         self.pushButton_delete.clicked.connect(self.delete_attendance)
-#         self.pushButton_reload_attlist.clicked.connect(self.load_admin_name_status_combobox)
+        self.pushButton_viewatt.clicked.connect(self.viewAttendance)
+        self.comboBox_admintab_name.currentIndexChanged.connect(self.load_att_marking_pic)
+        
         
         self.comboBox_admintab_dept.currentIndexChanged.connect(self.load_admin_name_status_combobox)
         
@@ -119,10 +157,24 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_profiledept.currentIndexChanged.connect(self.load_profile_namecombobox)
         self.comboBox_profilename.currentIndexChanged.connect(self.load_profile)
         
+        # view events
+        self.pushButton_viewnewevent.clicked.connect(self.viewEvents)
+#         self.comboBox_viewevent.addItem("All Events")
+
+        # add events
+        self.comboBox_addnewevent.addItem("Others")
+        self.pushButton_addnewevent.clicked.connect(self.addevents)
+        
+        
+        # Enable this line for reader pc
+        self.pushButton_connect.click()
+        self.pushButton_connecttohome.click()
+        
 
          
     def close_application(self):
         print "Thanks for using me!"
+        print "End Time:",datetime.datetime.now()
         sys.exit()
     
     def load_serial_port_2(self):
@@ -150,18 +202,75 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.pushButton_disconnect.setEnabled(True)
             
 #             self.connectDB()
+
+
+####################################################################################################################################################    
+    def addevents(self):
+        db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
+        cur = db.cursor()
+        
+        # search for duplicate, if no duplicate, add events, else prompt user
+        # currently only support 1 extra event per day due to restriction in the mysql table
+        cur.execute("SELECT * FROM event_test WHERE event_name='%s' AND event_date='%s' AND event_type='%s' " % (str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        duplicate = cur.fetchall()
+        
+        if duplicate == (): 
+            cur.execute("INSERT INTO event_test VALUES (NULL, '%s', '%s', '%s')" % (str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+            db.commit()
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Event added! Details: %s, @ %s, %s" %(str(self.lineEdit_addnewevent.text()), self.calendarWidget_addevent.selectedDate().toString("yyyy-MM-dd"), self.comboBox_addnewevent.currentText()))
+        
+        else:
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Duplicate found! Create different event")
+        
+        db.close()
+    
+    def viewEvents(self):
+        db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
+        cur = db.cursor()
+        
+        cur.execute("SELECT * FROM event_test WHERE event_date='%s' " % (self.calendarWidget_viewnewevent.selectedDate().toString("yyyy-MM-dd")))
+        events = cur.fetchall()
+        if events == ():
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("No such event. Check event details!")
+        else:
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Event loaded!")
+
             
+            self.tableWidget_viewevent.horizontalHeader().setStretchLastSection(True)
+            self.tableWidget_viewevent.setRowCount(len(events))
+            self.tableWidget_viewevent.setColumnCount(3)
+            self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+            self.tableWidget_viewevent.setHorizontalHeaderLabels(["Type", "Date", "Name" ])
             
+            for rownumber, rowvalue in enumerate(events):
+                self.tableWidget_viewevent.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
+                self.tableWidget_viewevent.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
+                self.tableWidget_viewevent.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
+        
+        
+
+        db.close()
+            
+####################################################################################################################################################    
+
     def add_new_member(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         
-        cur.execute("INSERT INTO members_list (chi_name, eng_name, dept, gender, membership_status, dob, passing_date, contact_num) VALUES ('%s', '%s', '%s', '%s', 'Active', '%s', '%s', '%s') " 
-                    % (self.nameLineEdit.text(), self.englishNameLineEdit.text(), self.comboBox_addmemberdept.currentText(), self.comboBox_addmembergender.currentText(), self.calendarWidget_newmember_dob.selectedDate().toString("yyyy-MM-dd"), self.calendarWidget_newmember_passing.selectedDate().toString("yyyy-MM-dd"), self.contactNum_lineEdit.text() ))
-        db.commit()
-        
-        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-        self.statusbar.showMessage("New member added!")
+        if self.nameLineEdit.text(): 
+            cur.execute("INSERT INTO members_list (chi_name, eng_name, dept, gender, membership_status, dob, passing_date, contact_num) VALUES ('%s', '%s', '%s', '%s', 'Active', '%s', '%s', '%s') " 
+                        % (self.nameLineEdit.text(), self.englishNameLineEdit.text(), self.comboBox_addmemberdept.currentText(), self.comboBox_addmembergender.currentText(), self.calendarWidget_newmember_dob.selectedDate().toString("yyyy-MM-dd"), self.calendarWidget_newmember_passing.selectedDate().toString("yyyy-MM-dd"), self.contactNum_lineEdit.text() ))
+            db.commit()
+             
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("New member added!")
+        else:
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Name cant be empty!")
 
 
 ####################################################################################################################################################    
@@ -223,6 +332,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         except:
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             self.statusbar.showMessage("Database cannot be reached, please re-enter")
+            self.pushButton_dbconnect.setText("Connection error")
+            self.pushButton_dbconnect.setStyleSheet("background-color: red")
             
         
 
@@ -234,10 +345,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.statusbar.showMessage("Loaded database")
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         
-        if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
-            cur.execute("SELECT * FROM members_list ORDER BY dept")
-        else: 
-            cur.execute("SELECT * FROM members_list WHERE dept='%s' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
+        if self.checkBox_inactivememebrs.isChecked():
+            if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
+                cur.execute("SELECT * FROM members_list ORDER BY dept")
+            else: 
+                cur.execute("SELECT * FROM members_list WHERE dept='%s' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
+        else:
+            if self.comboBox_viewtabledept.currentText() == "ALL DEPT":
+                cur.execute("SELECT * FROM members_list WHERE membership_status='Active' ORDER BY dept")
+            else: 
+                cur.execute("SELECT * FROM members_list WHERE dept='%s' AND membership_status='Active' ORDER BY dept" % self.comboBox_viewtabledept.currentText())
         
         memberlist = cur.fetchall()
         self.tableWidget.setRowCount(len(memberlist))
@@ -301,8 +418,36 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             else:    
                 self.tableWidget.setItem(rownumber,9,QtGui.QTableWidgetItem(rowvalue[9]))
         
+        # color the table cell according to dept
+        for rownumber, rowvalue in enumerate(memberlist):
+            if rowvalue[4] == "CL":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,178,102))
+            if rowvalue[4] == "BF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,255,102))
+            if rowvalue[4] == "JS":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(178,255,102))
+            if rowvalue[4] == "YM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
+            if rowvalue[4] == "YF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(153,255,204))
+            if rowvalue[4] == "CM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(102,255,255))
+            if rowvalue[4] == "CF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(102,178,255))
+            if rowvalue[4] == "SSM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(153,153,255))
+            if rowvalue[4] == "SSF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(178,102,255))
+            if rowvalue[4] == "MWM":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,102,255))
+            if rowvalue[4] == "MWF":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,102,178))
+            if rowvalue[4] == "GL":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,204,204))
+            if rowvalue[4] == "OS":
+                self.tableWidget.item(rownumber,2).setBackground(QtGui.QColor(255,102,102))
 
-        # load combobox values
+        # load combobox values in the table cell
         dept_list = ["CL","BF", "JS", "YM", "YF", "CM", "CF", "SSM", "SSF", "MWM", "MWF", "GL", "OS"]
         gender_list = ["M","F"]
         status_list = ["Active", "Inactive"]
@@ -351,7 +496,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             idnum = int(self.tableWidget.item(row, 0).text())
             
 
-
             if rfid_num == "":
                 cur.execute("UPDATE members_list SET rfid_num=NULL WHERE id=%d" % (idnum))
             else:
@@ -360,8 +504,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 cur.execute("UPDATE members_list SET rfid_num='%s' WHERE id=%d" % (rfid_num, idnum))
                 
             
-            cur.execute("UPDATE members_list SET chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', contact_num='%s' WHERE id=%d " 
-            % (chi_name,eng_name,dept,gender,membership_status,contact_num,idnum))
+            cur.execute("UPDATE members_list SET chi_name='%s', eng_name='%s', dept='%s', gender='%s', membership_status='%s', contact_num='%s', dob='%s',passing_date='%s' WHERE id=%d " 
+            % (chi_name,eng_name,dept,gender,membership_status,contact_num,dob,passing_date,idnum))
 
             db.commit()
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
@@ -391,7 +535,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_addmemberdept.clear()
         for dept in deptlist:
             self.comboBox_addmemberdept.addItems(dept)
-            
         
         self.comboBox_addmembergender.addItems(["F", "M"])
         db.close()
@@ -402,7 +545,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         cur.execute("SELECT event_type FROM event_test GROUP BY event_type")
         eventlist = cur.fetchall()
         for event in eventlist:
+#             print event
             self.comboBox_admintab_event.addItems(event)
+            self.comboBox_eventviewatt.addItems(event)
+#             self.comboBox_viewevent.addItems(event)
+            self.comboBox_addnewevent.addItems(event)
         db.close()
             
     def load_admin_name_status_combobox(self):
@@ -413,7 +560,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
         namelist = cur.fetchall()
-        for name in namelist:
+
+        for name in namelist: 
             self.comboBox_admintab_name.addItems(name)
         self.comboBox_admintab_status.addItems(["P", "B"])
         
@@ -453,7 +601,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         cur.execute("SELECT * FROM members_list WHERE chi_name='%s' " % (self.comboBox_profilename.currentText()))
         member_data = cur.fetchall()
         
-        print member_data
+#         print member_data
         
         if member_data is not ():
             
@@ -470,13 +618,13 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             if member_data[0][7] is None:
                 self.lineEdit_profiledob.setText("Null")
             else: 
-                self.lineEdit_profiledob.setText(member_data[0][7])
+                self.lineEdit_profiledob.setText(str(member_data[0][7]))
             self.lineEdit_profiledob.setDisabled(True)
             
             if member_data[0][8] is None:
                 self.lineEdit_profilepassing.setText("Null")
             else:
-                self.lineEdit_profilepassing.setText(member_data[0][8])
+                self.lineEdit_profilepassing.setText(str(member_data[0][8]))
             self.lineEdit_profilepassing.setDisabled(True)
             
             if member_data[0][9] is None:
@@ -489,53 +637,51 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             if os.path.exists("pics/%s.jpg" % self.comboBox_profilename.currentText()):
                         self.label_personalpic.setPixmap(QtGui.QPixmap("pics/%s.jpg" % self.comboBox_profilename.currentText()).scaledToHeight(200) )
             else:
-                self.label_personalpic.setPixmap(QtGui.QPixmap("unknown_profile.png" ).scaledToHeight(160))
-        
+                self.label_personalpic.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
+    
         
 ####################################################################################################################################################    
+    def load_att_marking_pic(self):
+        if os.path.exists("pics/%s.jpg" % self.comboBox_admintab_name.currentText()):
+                        self.label_attmarkingpic.setPixmap(QtGui.QPixmap("pics/%s.jpg" % self.comboBox_admintab_name.currentText()).scaledToHeight(160) )
+        else:
+            self.label_attmarkingpic.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
 
-        
     def submit_attendance(self):
-#         self.label_admintab_dynamic_remarks.setStyleSheet("color: none")
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         cur.execute("SELECT id from members_list WHERE chi_name='%s' " % self.comboBox_admintab_name.currentText() )
         member_id = cur.fetchall()
+        
         cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'  " % (self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
         event_id = cur.fetchall()
-        print event_id
+        
         
         if event_id == ():
-#             self.label_admintab_dynamic_remarks.setText("No such event! Check event type")
-#             self.label_admintab_dynamic_remarks.setStyleSheet("color: red")
             self.statusbar.showMessage("No such event! Check event type")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         
         duplicate = cur.execute("SELECT * FROM new_attendance_table WHERE member_id=%d AND event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
+        
         if duplicate == 0:
-#             self.label_admintab_dynamic_remarks.setText( "Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
-#             self.label_admintab_dynamic_remarks.setStyleSheet("color: green")
-            self.statusbar.showMessage("Submitted query for member_id=%d, event_id=%d, status=%s" % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-            cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status) VALUES ('%d', '%d', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText()))
+            cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', '%s', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText(), datetime.datetime.now()))
             db.commit()
+            self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=%s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd"), self.comboBox_admintab_status.currentText()))
         else:
             self.statusbar.showMessage("Duplicate entry")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
-#             self.label_admintab_dynamic_remarks.setText("Duplicate entry")
-#             self.label_admintab_dynamic_remarks.setStyleSheet("color: red")
-        
+
     def delete_attendance(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         cur.execute("SELECT id from members_list WHERE chi_name='%s' " % self.comboBox_admintab_name.currentText() )
         member_id = cur.fetchall()
-        cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'  " % (self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+        cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'" % (self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
         event_id = cur.fetchall()
         
         if event_id == ():
-#             self.label_admintab_dynamic_remarks.setText("No such event! Check event type")
             self.statusbar.showMessage("No such event! Check event type")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             
@@ -543,15 +689,58 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         found = cur.fetchall()
         
         if found == ():
-#             self.label_admintab_dynamic_remarks.setText("No record found!")
             self.statusbar.showMessage("No record found!")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         else:
             cur.execute("DELETE FROM new_attendance_table WHERE member_id=%d AND event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
-#             self.label_admintab_dynamic_remarks.setText( "Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
-            self.statusbar.showMessage("Deleted for member_id=%d, event_id=%d" % (int(member_id[0][0]), int(event_id[0][0])))
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             db.commit()
+            self.statusbar.showMessage("Deleted attendance for %s for %s on %s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+
+    def viewAttendance(self):
+        
+        db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
+        cur = db.cursor()
+        
+        
+        cur.execute("SELECT event_id FROM event_test WHERE event_type='%s' AND event_date='%s'" % (self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+        event_id = cur.fetchall()
+        
+        # check if event exists
+        if event_id == ():
+            self.statusbar.showMessage("No such event! Check event type")
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            
+        else:
+            cur.execute("SELECT chi_name, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+            attendees = cur.fetchall()
+            
+            self.tableWidget_attendee.horizontalHeader().setStretchLastSection(True)
+            self.tableWidget_attendee.setRowCount(len(attendees))
+            self.tableWidget_attendee.setColumnCount(3)
+#             self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
+            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status", "Time In" ])
+            
+            for rownumber, rowvalue in enumerate(attendees):
+                self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
+                self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
+                self.tableWidget_attendee.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
+                
+                # highlight broadcast members for easier view
+                if rowvalue[1]=='B':
+                    self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,204,255))
+                    self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,204,255))
+                    self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,204,255))
+                else:
+                    self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,255,153))
+                    self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,255,153))
+                    self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
+            
+            self.statusbar.showMessage("Attendees loaded")
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
+        
+        
+        
 ####################################################################################################################################################        
    
     def Time(self):
@@ -562,82 +751,82 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     def updateEventStatus(self):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
-        self.event_id=None
+        self.event_id = None
         self.current_date = datetime.datetime.date(datetime.datetime.now())
         self.current_time = datetime.datetime.time(datetime.datetime.now())
 #         self.current_date = date(2015,10,4)
 #         self.current_time = time(9,0,0)
-        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(18,00,0):
+        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
             self.event_type = "Sunday Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Sunday Service")
-            self.label_welcome.setText("Welcome, swipe ID for Sunday Service Attendance!")
-        elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(18,0,0) and self.current_time <= time(21,30,0):
+            self.label_welcome.setText("Welcome! swipe ID for Sunday Service Attendance!")
+        elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
             self.event_type = "Wednesday Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Wednesday Service")
-            self.label_welcome.setText("Welcome, swipe ID for Wednesday Service Attendance!")
-        elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(21,30,0):
+            self.label_welcome.setText("Welcome! swipe ID for Wednesday Service Attendance!")
+        elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
             self.event_type = "Friday Prayer Meeting"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Friday Prayer Meeting")
-            self.label_welcome.setText("Welcome, swipe ID for Friday Prayer Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Friday Prayer Attendance!")
                         
-        elif self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
+        elif self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+            self.event_type = "Dawn Service"
+            self.event_date = self.current_date
+            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+            self.event_id = str(cur.fetchall()[0][0])
+            self.label_dynamic_event.setText("Dawn Service")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
+        elif self.current_date.strftime("%A") == "Monday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
             self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Monday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
+        elif self.current_date.strftime("%A") == "Tuesday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Tuesday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
+        elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
+        elif self.current_date.strftime("%A") == "Thursday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Thursday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
+        elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
+        elif self.current_date.strftime("%A") == "Saturday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
             self.event_type = "Dawn Service"
             self.event_date = self.current_date
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Saturday" and self.current_time >= time(0,0,0) and self.current_time <= time(5,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, swipe ID for Dawn Service Attendance!")
+            self.label_welcome.setText("Welcome! swipe ID for Dawn Service Attendance!")
         
         else:
             self.label_dynamic_event.setText("No event now =(")
@@ -684,9 +873,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_sundayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_sundayservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
         
         self.mpl_sundayservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_sundayservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -700,7 +889,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_sundayservicedeptstats.canvas.draw()
         
         self.mpl_sundayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Sunday Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_sundayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_sundayservice_daily.canvas.ax.grid(True)
@@ -716,8 +905,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_sundayservice_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_sundayservice_daily.canvas.draw()
              
     def plot_wednesday_service(self): 
@@ -738,9 +927,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_weddayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_weddayservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
         
         self.mpl_weddayservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_weddayservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -754,7 +943,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_weddayservicedeptstats.canvas.draw() 
         
         self.mpl_wednesdayservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Wednesday Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_wednesdayservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_wednesdayservice_daily.canvas.ax.grid(True)
@@ -770,8 +959,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_wednesdayservice_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_wednesdayservice_daily.canvas.draw()
     
     def plot_friday_prayer(self):
@@ -792,9 +981,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_fridayservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_fridayservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
 
         self.mpl_fridayservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_fridayservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -808,7 +997,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_fridayservicedeptstats.canvas.draw()
         
         self.mpl_fridayprayer_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Friday Prayer Meeting", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_fridayprayer_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_fridayprayer_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_fridayprayer_daily.canvas.ax.grid(True)
@@ -824,8 +1013,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_fridayprayer_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_fridayprayer_daily.canvas.draw()
     
     def plot_dawn_service(self):   
@@ -846,9 +1035,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         broadcast_rects = self.mpl_dawnservicedeptstats.canvas.ax.barh(range(len(d_broadcast)), d_broadcast.values(), align='center', color="yellow", left=d_present.values(), label="Broadcast")
         absent_rects = self.mpl_dawnservicedeptstats.canvas.ax.barh(range(len(d_absent)), d_absent.values(), align='center', color="r", left=[i+j for i,j in zip(d_present.values(),d_broadcast.values())], label="Absent")
         
-        datacursor(present_rects, hover=True,formatter='{width}%'.format)
-        datacursor(broadcast_rects, hover=True,formatter='{width}%'.format)
-        datacursor(absent_rects, hover=True,formatter='{width}%'.format)
+        datacursor(present_rects, hover=False,formatter='{width}%'.format)
+        datacursor(broadcast_rects, hover=False,formatter='{width}%'.format)
+        datacursor(absent_rects, hover=False,formatter='{width}%'.format)
             
         self.mpl_dawnservicedeptstats.canvas.ax.set_yticks(range(len(d_present)))
         self.mpl_dawnservicedeptstats.canvas.ax.set_yticklabels(d_present.keys())
@@ -863,15 +1052,16 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         
         self.mpl_dawnservice_daily.canvas.ax.clear()
-        daily_present_list, daily_broadcast_list, days = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
+        daily_present_list, daily_broadcast_list, days, date_list = plot_service_daily(month=int(self.comboBox_monthselector.currentText()), year=int(self.comboBox_yearselector.currentText()), event_type="Dawn Service", dbhostip=self.databaseHostLineEdit.text())
         daily_present_rects = self.mpl_dawnservice_daily.canvas.ax.bar(days, daily_present_list, align='center', color="g", label="Present", width=1 )
         daily_braodcast_rects = self.mpl_dawnservice_daily.canvas.ax.bar(days, daily_broadcast_list, align='center', color="yellow", bottom=daily_present_list, label="Broadcast", width=1)
         self.mpl_dawnservice_daily.canvas.ax.grid(True)
+#         self.mpl_dawnservice_daily.canvas.ax.set_xticklabels(date_list, rotation=45)
         
         self.mpl_dawnservice_daily.canvas.ax.set_ylabel("No of members")
         self.mpl_dawnservice_daily.canvas.ax.set_xlabel("Day")
         self.mpl_dawnservice_daily.canvas.ax.set_xlim([0,days[-1]+1])
-        self.mpl_dawnservice_daily.canvas.ax.legend(loc='lower right')
+        self.mpl_dawnservice_daily.canvas.ax.legend(loc='upper right')
 #         self.mpl_dawnservice_daily.canvas.ax.set_title("Daily Dawn Service Attendance, [Month:%s Year:%s]" % (int(self.comboBox_monthselector.currentText()), int(self.comboBox_yearselector.currentText())))
         self.mpl_dawnservice_daily.canvas.ax.set_title("Attendance Distribution %s, %d" % (calendar.month_abbr[int(self.comboBox_monthselector.currentText())], int(self.comboBox_yearselector.currentText())), y=1.05)
         import matplotlib.ticker as plticker
@@ -879,8 +1069,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         loc = plticker.MultipleLocator(base=1.0) # this locator puts ticks at regular intervals
         self.mpl_dawnservice_daily.canvas.ax.xaxis.set_major_locator(loc)
         
-        datacursor(daily_present_rects, hover=True,formatter='{height}'.format)
-        datacursor(daily_braodcast_rects, hover=True,formatter='{height}'.format)
+        datacursor(daily_present_rects, hover=False,formatter='{height}'.format)
+        datacursor(daily_braodcast_rects, hover=False,formatter='{height}'.format)
         self.mpl_dawnservice_daily.canvas.draw()
         
     def plot_dept_stats(self):
@@ -895,7 +1085,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_memberscount.canvas.ax.set_xticklabels(members_count.keys())
         self.mpl_memberscount.canvas.ax.set_xlabel("Department")
         self.mpl_memberscount.canvas.ax.set_ylabel("Number of members")
-        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution")
+        self.mpl_memberscount.canvas.ax.set_ylim([0,40])
+        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution, Total Active Members:%d" % (sum(members_count.values())))
         self.mpl_memberscount.canvas.ax.grid(True)
         # label values on graph
         for rect in rects:
@@ -904,7 +1095,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     ha='center', va='bottom', color='blue', fontweight='bold')
             
         # hover mouse
-        datacursor(rects, hover=True,formatter='{height}'.format)
+        datacursor(rects, hover=False,formatter='{height}'.format)
         
         self.mpl_memberscount.canvas.draw()
         
@@ -945,17 +1136,20 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         if len(self.data) > 11:
             print "ID detected"
             read_id = self.data[:12]
-            print read_id
+            print "Detected ID:",read_id
+            print "Time:", datetime.datetime.now()
 
             member_data = self.search_database_for_member_id(read_id)
+            
             if member_data:
-                print "Success"
+#                 print "Success"
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
                 
                 print "Name: %s" % member_data[0][2].encode('utf-8')
+#                 print "Event ID", self.event_id
                 
-                self.label_dynamic_name.setText(member_data[0][2].encode('utf-8'))
+                self.label_dynamic_name.setText(member_data[0][2])
                 
                 if member_data[0][1] is not None:
                     self.label_dynamic_rfid.setText(member_data[0][1])
@@ -964,16 +1158,14 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 
                 self.label_dynamic_dept.setText(member_data[0][4])
                 
-                
-                
                 if os.path.exists("pics/%s.jpg" % member_data[0][2].encode('utf-8')):
                     self.label_picture.setPixmap(QtGui.QPixmap("pics/%s.jpg" % member_data[0][2]).scaledToHeight(200) )
 
                 else:
-                    self.label_picture.setPixmap(QtGui.QPixmap("unknown_profile.png" ).scaledToHeight(160))
+                    self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
                  
                 self.updateEventStatus()
-                print "Event ID", self.event_id
+                
                 self.label_dynamic_status.setStyleSheet("color: black")
                 
                 if self.event_id is not None:
@@ -981,21 +1173,27 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     if cur.fetchall() == ():
                         cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
                         db.commit()
-                        print "Recorded!"
-                        print "Member:", member_data[0][2]
+                        print "*****Recorded!*****"
+                        print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date 
                         self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
                         self.label_dynamic_status.setStyleSheet("color: green")
+                        self.statusbar.clearMessage()
+                        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
     
                     else:
                         print "Record exists for:"
-                        print "Member:", member_data[0][2]
+                        print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date
                         self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
                         self.label_dynamic_status.setStyleSheet("color: red")
+                        self.statusbar.clearMessage()
+                        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                 else:
                     self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
                     self.label_dynamic_status.setStyleSheet("color: black")
+                    self.statusbar.clearMessage()
+                    self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
 
             else:
                 print "Sorry no match in database!"
@@ -1006,15 +1204,25 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.label_dynamic_dept.clear()
                 self.label_dynamic_rfid.clear()
                 self.label_dynamic_engname.clear()
+                self.statusbar.clearMessage()
+                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                 
         
 def main():
+
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+#     form = AttTracker() 
+#     form.show()                         # Show the form
+#     app.exec_()                         
+
+    if Login().exec_() == QtGui.QDialog.Accepted:
+        form = AttTracker() 
+        form.show()                         # Show the form
+        app.exec_()                         # and execute the app
+
+
+        
+
     
-    form = AttTracker()                 # We set the form to be our ExampleApp (design)
-    form.show()                         # Show the form
-    app.exec_()                         # and execute the app
-
-
 if __name__ == '__main__':              # if we're running file directly and not importing it
     main()    
