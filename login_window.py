@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'login.ui'
 #
-# Created: Sun Nov 29 18:51:15 2015
+# Created: Sat Dec  5 23:17:35 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,10 +12,10 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(484, 149)
+        Dialog.resize(484, 190)
         Dialog.setModal(True)
         self.groupBox = QtGui.QGroupBox(Dialog)
-        self.groupBox.setGeometry(QtCore.QRect(20, 10, 291, 131))
+        self.groupBox.setGeometry(QtCore.QRect(20, 20, 311, 161))
         self.groupBox.setObjectName("groupBox")
         self.verticalLayout = QtGui.QVBoxLayout(self.groupBox)
         self.verticalLayout.setObjectName("verticalLayout")
@@ -48,6 +48,14 @@ class Ui_Dialog(object):
         self.pushButton_login = QtGui.QPushButton(self.groupBox)
         self.pushButton_login.setObjectName("pushButton_login")
         self.verticalLayout.addWidget(self.pushButton_login)
+        self.loginlabel = QtGui.QLabel(self.groupBox)
+        self.loginlabel.setText("")
+        self.loginlabel.setObjectName("loginlabel")
+        self.verticalLayout.addWidget(self.loginlabel)
+        self.loginlogo = QtGui.QLabel(Dialog)
+        self.loginlogo.setGeometry(QtCore.QRect(340, 30, 100, 100))
+        self.loginlogo.setText("")
+        self.loginlogo.setObjectName("loginlogo")
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)

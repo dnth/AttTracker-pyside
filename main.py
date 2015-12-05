@@ -1,4 +1,4 @@
-#!/home/camaro-workstation/anaconda/bin/python
+#!/usr/bin/env python
 import sys
 import os
 from PySide import QtGui, QtCore
@@ -35,6 +35,14 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.lineEdit_password.setText("lwcuser")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
+        self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
+        
+#         self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
+        
+        self.count = 11
+        self.timer = QtCore.QTimer(self)
+        self.timer.timeout.connect(self.countdown)
+        self.timer.start(1000)
          
     def handleLogin(self):
         if (self.lineEdit_username.text() == 'lwcadmin' and self.lineEdit_password.text() == 'lwcadmin'):
@@ -49,8 +57,12 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
             QtGui.QMessageBox.warning(
                 self, 'Error', 'Bad user or password')
         
-        
-            
+    def countdown(self):
+        self.count-=1 
+#         print self.count
+        self.loginlabel.setText("Login as lwcuser in "+str(self.count)+" seconds")
+        if self.count <= 0:
+            self.pushButton_login.click()
 
 class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
     def __init__(self):
@@ -82,7 +94,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
 
         if not isAdmin:
-            print "Logged in as user"
+            print "Logged in as lwcuser"
             self.tab_widget_overall.setTabEnabled(0, False)
             self.tab_widget_overall.setTabEnabled(2, False)
             self.tab_widget_overall.setTabEnabled(3, False)
