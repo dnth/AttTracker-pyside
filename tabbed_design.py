@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Wed Dec  2 17:21:24 2015
+# Created: Tue Dec  8 04:04:45 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -744,6 +744,32 @@ class Ui_LWCAttendanceTaker(object):
         self.calendarWidget_attview.setVerticalHeaderFormat(QtGui.QCalendarWidget.NoVerticalHeader)
         self.calendarWidget_attview.setObjectName("calendarWidget_attview")
         self.gridLayout_2.addWidget(self.calendarWidget_attview, 0, 1, 1, 1)
+        self.label_16 = QtGui.QLabel(self.groupBox_8)
+        font = QtGui.QFont()
+        font.setWeight(75)
+        font.setBold(True)
+        self.label_16.setFont(font)
+        self.label_16.setObjectName("label_16")
+        self.gridLayout_2.addWidget(self.label_16, 6, 0, 1, 1)
+        self.gridLayout_3 = QtGui.QGridLayout()
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.label_21 = QtGui.QLabel(self.groupBox_8)
+        self.label_21.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_21.setObjectName("label_21")
+        self.gridLayout_3.addWidget(self.label_21, 1, 0, 1, 1)
+        self.label_20 = QtGui.QLabel(self.groupBox_8)
+        self.label_20.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_20.setObjectName("label_20")
+        self.gridLayout_3.addWidget(self.label_20, 0, 0, 1, 1)
+        self.label_totalpresent = QtGui.QLabel(self.groupBox_8)
+        self.label_totalpresent.setText("")
+        self.label_totalpresent.setObjectName("label_totalpresent")
+        self.gridLayout_3.addWidget(self.label_totalpresent, 0, 1, 1, 1)
+        self.label_totalbroadcast = QtGui.QLabel(self.groupBox_8)
+        self.label_totalbroadcast.setText("")
+        self.label_totalbroadcast.setObjectName("label_totalbroadcast")
+        self.gridLayout_3.addWidget(self.label_totalbroadcast, 1, 1, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout_3, 6, 1, 1, 1)
         self.horizontalLayout_11.addWidget(self.groupBox_8)
         self.tabWidget_adminmarking.addTab(self.tab_5, "")
         self.tab = QtGui.QWidget()
@@ -1204,6 +1230,9 @@ class Ui_LWCAttendanceTaker(object):
         self.eventLabel.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Event", None, QtGui.QApplication.UnicodeUTF8))
         self.dateLabel.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Date", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_viewatt.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "View!", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_16.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Summary", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_21.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Total Broadcast:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_20.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Total Present:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab_5), QtGui.QApplication.translate("LWCAttendanceTaker", "Admin Marking", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab), QtGui.QApplication.translate("LWCAttendanceTaker", "Members Count", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_commitchange.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Commit Changes", None, QtGui.QApplication.UnicodeUTF8))

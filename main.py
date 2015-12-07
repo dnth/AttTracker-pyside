@@ -563,7 +563,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 
         for name in namelist: 
             self.comboBox_admintab_name.addItems(name)
-        self.comboBox_admintab_status.addItems(["P", "B"])
+        self.comboBox_admintab_status.addItems(["B", "P"])
         
         db.close()
          
@@ -721,21 +721,31 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 #             self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
             self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status", "Time In" ])
             
+            
+            broadcast_count = 0
+            present_count = 0
+                
             for rownumber, rowvalue in enumerate(attendees):
                 self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
                 self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
                 self.tableWidget_attendee.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
                 
+                
                 # highlight broadcast members for easier view
                 if rowvalue[1]=='B':
+                    broadcast_count+=1
                     self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,204,255))
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,204,255))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,204,255))
                 else:
+                    present_count+=1
                     self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
             
+            # show summary in label
+            self.label_totalbroadcast.setText(str(broadcast_count))
+            self.label_totalpresent.setText(str(present_count))
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
         
