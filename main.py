@@ -165,10 +165,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_addnewevent.addItem("Others")
         self.pushButton_addnewevent.clicked.connect(self.addevents)
         
-        
         # Enable this line for reader pc
         self.pushButton_connect.click()
         self.pushButton_connecttohome.click()
+        
+        # default check for attendance radio button
+        self.radioButton_present.setChecked(True)
         
 
          
@@ -556,14 +558,14 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         self.comboBox_admintab_name.clear()
-        self.comboBox_admintab_status.clear()
+#         self.comboBox_admintab_status.clear()
         
         cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
         namelist = cur.fetchall()
 
         for name in namelist: 
             self.comboBox_admintab_name.addItems(name)
-        self.comboBox_admintab_status.addItems(["B", "P"])
+#         self.comboBox_admintab_status.addItems(["B", "P"])
         
         db.close()
          
@@ -666,9 +668,18 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         if duplicate == 0:
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-            cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', '%s', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText(), datetime.datetime.now()))
-            db.commit()
-            self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=%s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd"), self.comboBox_admintab_status.currentText()))
+            
+            if self.radioButton_present.isChecked():
+                cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', 'P', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), datetime.datetime.now()))
+                db.commit()
+                self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=P" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+            
+            elif self.radioButton_broadcast.isChecked():
+                cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', 'B', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), datetime.datetime.now()))
+                db.commit()
+                self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=B" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+        
+        
         else:
             self.statusbar.showMessage("Duplicate entry")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")

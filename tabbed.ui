@@ -1047,7 +1047,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
+               <item row="0" column="2">
                 <widget class="QComboBox" name="comboBox_admintab_dept"/>
                </item>
                <item row="1" column="0">
@@ -1066,7 +1066,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
+               <item row="1" column="2">
                 <widget class="QComboBox" name="comboBox_admintab_name"/>
                </item>
                <item row="3" column="0">
@@ -1085,7 +1085,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
+               <item row="3" column="2">
                 <widget class="QComboBox" name="comboBox_admintab_event"/>
                </item>
                <item row="4" column="0">
@@ -1104,7 +1104,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="1">
+               <item row="4" column="2">
                 <widget class="QCalendarWidget" name="calendarWidget">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -1160,10 +1160,7 @@
                  </property>
                 </widget>
                </item>
-               <item row="5" column="1">
-                <widget class="QComboBox" name="comboBox_admintab_status"/>
-               </item>
-               <item row="7" column="1">
+               <item row="9" column="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_16">
                  <item>
                   <widget class="QPushButton" name="pushButton_delete">
@@ -1181,7 +1178,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="6" column="1">
+               <item row="8" column="2">
                 <spacer name="verticalSpacer">
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
@@ -1194,7 +1191,7 @@
                  </property>
                 </spacer>
                </item>
-               <item row="2" column="1">
+               <item row="2" column="2">
                 <widget class="QLabel" name="label_attmarkingpic">
                  <property name="text">
                   <string/>
@@ -1220,6 +1217,20 @@
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="2">
+                <widget class="QRadioButton" name="radioButton_broadcast">
+                 <property name="text">
+                  <string>Broadcast</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="2">
+                <widget class="QRadioButton" name="radioButton_present">
+                 <property name="text">
+                  <string>Present</string>
                  </property>
                 </widget>
                </item>
