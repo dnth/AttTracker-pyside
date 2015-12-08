@@ -723,14 +723,13 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             
         else:
-            cur.execute("SELECT chi_name, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+            cur.execute("SELECT chi_name, dept, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
             attendees = cur.fetchall()
             
             self.tableWidget_attendee.horizontalHeader().setStretchLastSection(True)
             self.tableWidget_attendee.setRowCount(len(attendees))
-            self.tableWidget_attendee.setColumnCount(3)
-#             self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status", "Time In" ])
+            self.tableWidget_attendee.setColumnCount(4)
+            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Dept", "Status", "Time In" ])
             
             
             broadcast_count = 0
@@ -740,26 +739,31 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
                 self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
                 self.tableWidget_attendee.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
+                self.tableWidget_attendee.setItem(rownumber,3,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
                 
                 
                 # highlight broadcast members for easier view
-                if rowvalue[1]=='B':
+                if rowvalue[2]=='B':
                     broadcast_count+=1
                     self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,204,255))
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,204,255))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,204,255))
+                    self.tableWidget_attendee.item(rownumber,3).setBackground(QtGui.QColor(153,204,255))
                 else:
                     present_count+=1
                     self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
+                    self.tableWidget_attendee.item(rownumber,3).setBackground(QtGui.QColor(153,255,153))
             
             # show summary in label
             self.label_totalbroadcast.setText(str(broadcast_count))
             self.label_totalpresent.setText(str(present_count))
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-        
+            
+            self.tableWidget_attendee.resizeColumnsToContents()
+            self.tableWidget_attendee.horizontalHeader().setStretchLastSection(True)
         
         
 ####################################################################################################################################################        
