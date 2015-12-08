@@ -31,8 +31,8 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
         
-        self.lineEdit_username.setText("lwcuser")
-        self.lineEdit_password.setText("lwcuser")
+        self.lineEdit_username.setText("lwcadmin")
+        self.lineEdit_password.setText("lwcadmin")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
         self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
