@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Tue Dec  8 14:29:34 2015
+# Created: Tue Dec  8 15:05:30 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_LWCAttendanceTaker(object):
     def setupUi(self, LWCAttendanceTaker):
         LWCAttendanceTaker.setObjectName("LWCAttendanceTaker")
-        LWCAttendanceTaker.resize(1200, 887)
+        LWCAttendanceTaker.resize(1200, 743)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -25,9 +25,8 @@ class Ui_LWCAttendanceTaker(object):
         LWCAttendanceTaker.setTabShape(QtGui.QTabWidget.Rounded)
         self.centralwidget = QtGui.QWidget(LWCAttendanceTaker)
         self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout_5 = QtGui.QGridLayout(self.centralwidget)
-        self.gridLayout_5.setObjectName("gridLayout_5")
         self.tab_widget_overall = QtGui.QTabWidget(self.centralwidget)
+        self.tab_widget_overall.setGeometry(QtCore.QRect(9, 5, 1181, 651))
         self.tab_widget_overall.setIconSize(QtCore.QSize(25, 25))
         self.tab_widget_overall.setObjectName("tab_widget_overall")
         self.tab_setup = QtGui.QWidget()
@@ -1112,20 +1111,14 @@ class Ui_LWCAttendanceTaker(object):
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap("icon/admin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tab_widget_overall.addTab(self.tab_admin, icon3, "")
-        self.gridLayout_5.addWidget(self.tab_widget_overall, 1, 0, 1, 1)
-        self.horizontalLayout = QtGui.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem7 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout.addItem(spacerItem7)
         self.pushButton_quit = QtGui.QPushButton(self.centralwidget)
+        self.pushButton_quit.setGeometry(QtCore.QRect(10, 660, 121, 27))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setWeight(50)
         font.setBold(False)
         self.pushButton_quit.setFont(font)
         self.pushButton_quit.setObjectName("pushButton_quit")
-        self.horizontalLayout.addWidget(self.pushButton_quit)
-        self.gridLayout_5.addLayout(self.horizontalLayout, 3, 0, 1, 1)
         LWCAttendanceTaker.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(LWCAttendanceTaker)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1200, 25))
@@ -1163,7 +1156,7 @@ class Ui_LWCAttendanceTaker(object):
         self.pushButton_refresh.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Refresh", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_connect.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Connect", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_disconnect.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Disconnect", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_5.setTitle(QtGui.QApplication.translate("LWCAttendanceTaker", "Database Parameter", None, QtGui.QApplication.UnicodeUTF8))
+        self.groupBox_5.setTitle(QtGui.QApplication.translate("LWCAttendanceTaker", "Database Parameters", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_dbconnect.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Connect to database", None, QtGui.QApplication.UnicodeUTF8))
         self.databaseHostLabel.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Database Server Host IP", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_connecttohome.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Connect to 127.0.0.1", None, QtGui.QApplication.UnicodeUTF8))
