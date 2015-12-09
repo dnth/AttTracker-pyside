@@ -780,8 +780,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.event_id = None
         self.current_date = datetime.datetime.date(datetime.datetime.now())
         self.current_time = datetime.datetime.time(datetime.datetime.now())
-#         self.current_date = date(2015,10,4)
-#         self.current_time = time(9,0,0)
+#         self.current_date = date(2015,10,7)
+#         self.current_time = time(19,0,0)
         if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
             self.event_type = "Sunday Service"
             self.event_date = self.current_date
@@ -795,7 +795,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Wednesday Service")
-            self.label_dynamic_event.setStyleSheet("background-color: rgba(255, 255, 255, 0)")
             self.label_welcome.setText("Welcome! swipe ID for Wednesday Service Attendance!")
         elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
             self.event_type = "Friday Prayer Meeting"
@@ -858,10 +857,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         else:
             self.label_dynamic_event.setText("No event now =(")
             self.label_welcome.setText("Welcome! There's no event now")
-            self.label_dynamic_event.setStyleSheet("font-size:11pt")
+            self.label_dynamic_event.setStyleSheet("font-size:11pt;background-color: rgba(255, 255, 255, 0)")
+            
             
         if self.event_id is not None:
-            self.label_dynamic_event.setStyleSheet("color: red")
+            self.label_dynamic_event.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0)")
+        
             
     
 ####################################################################################################################################################            
