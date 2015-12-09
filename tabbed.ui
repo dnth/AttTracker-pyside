@@ -469,7 +469,7 @@
          <x>74</x>
          <y>129</y>
          <width>241</width>
-         <height>17</height>
+         <height>34</height>
         </rect>
        </property>
        <property name="font">
@@ -495,10 +495,17 @@
         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
        </property>
       </widget>
+      <zorder>label_dynamic_engname</zorder>
+      <zorder>label_dynamic_name</zorder>
+      <zorder>label_static_dummy</zorder>
+      <zorder>label_static_rfid</zorder>
+      <zorder>label_dynamic_rfid</zorder>
+      <zorder>label_static_dept</zorder>
+      <zorder>label_dynamic_dept</zorder>
+      <zorder>label_static_status</zorder>
+      <zorder>label_dynamic_status</zorder>
       <zorder>label_picture</zorder>
-      <zorder></zorder>
-      <zorder>label_22</zorder>
-      <zorder>label_22</zorder>
+      <zorder>label_static_name</zorder>
      </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
@@ -665,11 +672,6 @@
        </layout>
       </widget>
      </widget>
-     <zorder>label_welcome</zorder>
-     <zorder>groupBox_2</zorder>
-     <zorder>groupBox_2</zorder>
-     <zorder>groupBox_2</zorder>
-     <zorder>groupBox_4</zorder>
     </widget>
     <widget class="QWidget" name="tab_statistics">
      <attribute name="icon">

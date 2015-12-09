@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Tue Dec  8 15:05:30 2015
+# Created: Wed Dec  9 18:41:55 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -218,7 +218,7 @@ class Ui_LWCAttendanceTaker(object):
         self.label_static_status.setFont(font)
         self.label_static_status.setObjectName("label_static_status")
         self.label_dynamic_status = QtGui.QLabel(self.groupBox_2)
-        self.label_dynamic_status.setGeometry(QtCore.QRect(74, 129, 241, 17))
+        self.label_dynamic_status.setGeometry(QtCore.QRect(74, 129, 241, 34))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setWeight(50)
