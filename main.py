@@ -172,6 +172,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # default check for attendance radio button
         self.radioButton_present.setChecked(True)
         
+        self.backgroundpic.lower()
 
          
     def close_application(self):
@@ -794,6 +795,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
             self.event_id = str(cur.fetchall()[0][0])
             self.label_dynamic_event.setText("Wednesday Service")
+            self.label_dynamic_event.setStyleSheet("background-color: rgba(255, 255, 255, 0)")
             self.label_welcome.setText("Welcome! swipe ID for Wednesday Service Attendance!")
         elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
             self.event_type = "Friday Prayer Meeting"

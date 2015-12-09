@@ -41,8 +41,8 @@
    <widget class="QTabWidget" name="tab_widget_overall">
     <property name="geometry">
      <rect>
-      <x>9</x>
-      <y>5</y>
+      <x>10</x>
+      <y>10</y>
       <width>1181</width>
       <height>651</height>
      </rect>
@@ -247,6 +247,9 @@
       <property name="cursor">
        <cursorShape>ArrowCursor</cursorShape>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgba(255, 255, 255, 150)</string>
+      </property>
       <property name="title">
        <string>Identification</string>
       </property>
@@ -271,6 +274,9 @@
          <height>160</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -291,6 +297,9 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+       </property>
        <property name="text">
         <string>Name:</string>
        </property>
@@ -310,6 +319,9 @@
          <weight>50</weight>
          <bold>false</bold>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
        </property>
        <property name="text">
         <string/>
@@ -337,6 +349,9 @@
        <property name="cursor">
         <cursorShape>IBeamCursor</cursorShape>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -352,6 +367,9 @@
          <width>16</width>
          <height>17</height>
         </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
        </property>
        <property name="text">
         <string/>
@@ -372,6 +390,9 @@
          <weight>75</weight>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
        </property>
        <property name="text">
         <string>RFID:</string>
@@ -396,6 +417,10 @@
        <property name="cursor">
         <cursorShape>IBeamCursor</cursorShape>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)
+</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -419,6 +444,9 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+       </property>
        <property name="text">
         <string>Dept:</string>
        </property>
@@ -439,6 +467,9 @@
          <bold>false</bold>
         </font>
        </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -458,6 +489,9 @@
          <weight>75</weight>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
        </property>
        <property name="text">
         <string>Status:</string>
@@ -481,6 +515,9 @@
        </property>
        <property name="cursor">
         <cursorShape>IBeamCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
        </property>
        <property name="text">
         <string/>
@@ -506,6 +543,7 @@
       <zorder>label_dynamic_status</zorder>
       <zorder>label_picture</zorder>
       <zorder>label_static_name</zorder>
+      <zorder>backgroundpic</zorder>
      </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
@@ -535,6 +573,12 @@
         <bold>true</bold>
        </font>
       </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgba(255, 255, 255, 150)</string>
+      </property>
       <property name="title">
        <string>What's up?</string>
       </property>
@@ -545,12 +589,15 @@
        <property name="geometry">
         <rect>
          <x>7</x>
-         <y>30</y>
-         <width>311</width>
-         <height>181</height>
+         <y>22</y>
+         <width>321</width>
+         <height>601</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout_2">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+        </property>
         <item row="0" column="0">
          <widget class="QLabel" name="label_static_time">
           <property name="font">
@@ -559,6 +606,9 @@
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
           </property>
           <property name="text">
            <string>Time:</string>
@@ -598,6 +648,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+          </property>
           <property name="text">
            <string>Date:</string>
           </property>
@@ -615,6 +668,9 @@
             <bold>false</bold>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -628,6 +684,9 @@
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
           </property>
           <property name="text">
            <string>Event:</string>
@@ -659,7 +718,7 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">qproperty-alignment: 'AlignVCenter | AlignLeft';</string>
+           <string notr="true">background-color: rgba(255, 255, 255, 0)</string>
           </property>
           <property name="text">
            <string/>
@@ -672,6 +731,29 @@
        </layout>
       </widget>
      </widget>
+     <widget class="QLabel" name="backgroundpic">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>1181</width>
+        <height>611</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>icon/1280x720.jpg</pixmap>
+      </property>
+     </widget>
+     <zorder>backgroundpic</zorder>
+     <zorder>label_welcome</zorder>
+     <zorder>groupBox_2</zorder>
+     <zorder>groupBox_4</zorder>
     </widget>
     <widget class="QWidget" name="tab_statistics">
      <attribute name="icon">
