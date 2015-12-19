@@ -31,8 +31,8 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
         
-        self.lineEdit_username.setText("lwcuser")
-        self.lineEdit_password.setText("lwcuser")
+        self.lineEdit_username.setText("lwcadmin")
+        self.lineEdit_password.setText("lwcadmin")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
         self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
@@ -100,7 +100,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.tab_widget_overall.setTabEnabled(3, False)
         
         
-    def home(self):
+    def home(self):                        
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         self.statusbar.showMessage("Connect to the RFID reader and database to start")
         
@@ -165,7 +165,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_addnewevent.addItem("Others")
         self.pushButton_addnewevent.clicked.connect(self.addevents)
         
-        # Enable this line for reader pc
+        # Enable this line for reader pc. This line simulates a user click on these buttons
         self.pushButton_connect.click()
         self.pushButton_connecttohome.click()
         
@@ -1194,7 +1194,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                  
                 self.updateEventStatus()
                 
-                self.label_dynamic_status.setStyleSheet("color: black")
+                self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                 
                 if self.event_id is not None:
                     cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
@@ -1205,7 +1205,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date 
                         self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
-                        self.label_dynamic_status.setStyleSheet("color: green")
+                        self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0)")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
     
@@ -1214,19 +1214,19 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date
                         self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
-                        self.label_dynamic_status.setStyleSheet("color: red")
+                        self.label_dynamic_status.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0)")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                 else:
                     self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
-                    self.label_dynamic_status.setStyleSheet("color: black")
+                    self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                     self.statusbar.clearMessage()
                     self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
 
             else:
                 print "Sorry no match in database!"
                 self.label_dynamic_status.setText("Sorry no match in database! Please get help from LWC admin")
-                self.label_dynamic_status.setStyleSheet("color: blue")
+                self.label_dynamic_status.setStyleSheet("color: blue; background-color: rgba(255, 255, 255, 0)")
                 self.label_picture.clear()
                 self.label_dynamic_name.clear()
                 self.label_dynamic_dept.clear()
