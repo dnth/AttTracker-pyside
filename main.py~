@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/home/camaro/anaconda/bin/python
 import sys
 import os
 from PySide import QtGui, QtCore
@@ -31,8 +31,8 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
         
-        self.lineEdit_username.setText("lwcuser")
-        self.lineEdit_password.setText("lwcuser")
+        self.lineEdit_username.setText("lwcadmin")
+        self.lineEdit_password.setText("lwcadmin")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
         self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
@@ -100,7 +100,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.tab_widget_overall.setTabEnabled(3, False)
         
         
-    def home(self):
+    def home(self):                        
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         self.statusbar.showMessage("Connect to the RFID reader and database to start")
         
@@ -165,11 +165,14 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.comboBox_addnewevent.addItem("Others")
         self.pushButton_addnewevent.clicked.connect(self.addevents)
         
-        
-        # Enable this line for reader pc
+        # Enable this line for reader pc. This line simulates a user click on these buttons
         self.pushButton_connect.click()
         self.pushButton_connecttohome.click()
         
+        # default check for attendance radio button
+        self.radioButton_present.setChecked(True)
+        
+        self.backgroundpic.lower()
 
          
     def close_application(self):
@@ -556,14 +559,14 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         self.comboBox_admintab_name.clear()
-        self.comboBox_admintab_status.clear()
+#         self.comboBox_admintab_status.clear()
         
         cur.execute("SELECT chi_name FROM members_list WHERE dept='%s' AND membership_status='Active'" % self.comboBox_admintab_dept.currentText())
         namelist = cur.fetchall()
 
         for name in namelist: 
             self.comboBox_admintab_name.addItems(name)
-        self.comboBox_admintab_status.addItems(["P", "B"])
+#         self.comboBox_admintab_status.addItems(["B", "P"])
         
         db.close()
          
@@ -666,9 +669,18 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
         if duplicate == 0:
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-            cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', '%s', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), self.comboBox_admintab_status.currentText(), datetime.datetime.now()))
-            db.commit()
-            self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=%s" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd"), self.comboBox_admintab_status.currentText()))
+            
+            if self.radioButton_present.isChecked():
+                cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', 'P', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), datetime.datetime.now()))
+                db.commit()
+                self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=P" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+            
+            elif self.radioButton_broadcast.isChecked():
+                cur.execute("INSERT INTO new_attendance_table (member_id, event_id, status, timestamp) VALUES ('%d', '%d', 'B', '%s') " % (int(member_id[0][0]), int(event_id[0][0]), datetime.datetime.now()))
+                db.commit()
+                self.statusbar.showMessage("Submitted attendance for %s for %s on %s. Attendance=B" % (self.comboBox_admintab_name.currentText(), self.comboBox_admintab_event.currentText(), self.calendarWidget.selectedDate().toString("yyyy-MM-dd")))
+        
+        
         else:
             self.statusbar.showMessage("Duplicate entry")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
@@ -712,33 +724,47 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             
         else:
-            cur.execute("SELECT chi_name, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
+            cur.execute("SELECT chi_name, dept, status, timestamp FROM member_attendance_summary WHERE event_type='%s' AND event_date='%s' " %(self.comboBox_eventviewatt.currentText(), self.calendarWidget_attview.selectedDate().toString("yyyy-MM-dd")))
             attendees = cur.fetchall()
             
             self.tableWidget_attendee.horizontalHeader().setStretchLastSection(True)
             self.tableWidget_attendee.setRowCount(len(attendees))
-            self.tableWidget_attendee.setColumnCount(3)
-#             self.tableWidget_attendee.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
-            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Status", "Time In" ])
+            self.tableWidget_attendee.setColumnCount(4)
+            self.tableWidget_attendee.setHorizontalHeaderLabels(["Name", "Dept", "Status", "Time In" ])
             
+            
+            broadcast_count = 0
+            present_count = 0
+                
             for rownumber, rowvalue in enumerate(attendees):
                 self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
                 self.tableWidget_attendee.setItem(rownumber,1,QtGui.QTableWidgetItem("%s" %rowvalue[1]))
                 self.tableWidget_attendee.setItem(rownumber,2,QtGui.QTableWidgetItem("%s" %rowvalue[2]))
+                self.tableWidget_attendee.setItem(rownumber,3,QtGui.QTableWidgetItem("%s" %rowvalue[3]))
+                
                 
                 # highlight broadcast members for easier view
-                if rowvalue[1]=='B':
+                if rowvalue[2]=='B':
+                    broadcast_count+=1
                     self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,204,255))
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,204,255))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,204,255))
+                    self.tableWidget_attendee.item(rownumber,3).setBackground(QtGui.QColor(153,204,255))
                 else:
+                    present_count+=1
                     self.tableWidget_attendee.item(rownumber,0).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
+                    self.tableWidget_attendee.item(rownumber,3).setBackground(QtGui.QColor(153,255,153))
             
+            # show summary in label
+            self.label_totalbroadcast.setText(str(broadcast_count))
+            self.label_totalpresent.setText(str(present_count))
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
-        
+            
+            self.tableWidget_attendee.resizeColumnsToContents()
+            self.tableWidget_attendee.horizontalHeader().setStretchLastSection(True)
         
         
 ####################################################################################################################################################        
@@ -754,8 +780,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.event_id = None
         self.current_date = datetime.datetime.date(datetime.datetime.now())
         self.current_time = datetime.datetime.time(datetime.datetime.now())
-#         self.current_date = date(2015,10,4)
-#         self.current_time = time(9,0,0)
+#         self.current_date = date(2015,10,7)
+#         self.current_time = time(19,0,0)
         if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
             self.event_type = "Sunday Service"
             self.event_date = self.current_date
@@ -831,10 +857,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         else:
             self.label_dynamic_event.setText("No event now =(")
             self.label_welcome.setText("Welcome! There's no event now")
-            self.label_dynamic_event.setStyleSheet("font-size:11pt")
+            self.label_dynamic_event.setStyleSheet("font-size:11pt;background-color: rgba(255, 255, 255, 0)")
+            
             
         if self.event_id is not None:
-            self.label_dynamic_event.setStyleSheet("color: red")
+            self.label_dynamic_event.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0)")
+        
             
     
 ####################################################################################################################################################            
@@ -1166,7 +1194,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                  
                 self.updateEventStatus()
                 
-                self.label_dynamic_status.setStyleSheet("color: black")
+                self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                 
                 if self.event_id is not None:
                     cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
@@ -1177,7 +1205,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date 
                         self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
-                        self.label_dynamic_status.setStyleSheet("color: green")
+                        self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0)")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
     
@@ -1186,19 +1214,19 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         print "Member:", member_data[0][2].encode('utf-8')
                         print "Event:", self.event_type, self.event_date
                         self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
-                        self.label_dynamic_status.setStyleSheet("color: red")
+                        self.label_dynamic_status.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0)")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                 else:
                     self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
-                    self.label_dynamic_status.setStyleSheet("color: black")
+                    self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                     self.statusbar.clearMessage()
                     self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
 
             else:
                 print "Sorry no match in database!"
                 self.label_dynamic_status.setText("Sorry no match in database! Please get help from LWC admin")
-                self.label_dynamic_status.setStyleSheet("color: blue")
+                self.label_dynamic_status.setStyleSheet("color: blue; background-color: rgba(255, 255, 255, 0)")
                 self.label_picture.clear()
                 self.label_dynamic_name.clear()
                 self.label_dynamic_dept.clear()
@@ -1211,6 +1239,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 def main():
 
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
+    app.setStyle(QtGui.QStyleFactory.create("cleanlooks"))
 #     form = AttTracker() 
 #     form.show()                         # Show the form
 #     app.exec_()                         
