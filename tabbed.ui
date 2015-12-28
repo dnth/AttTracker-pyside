@@ -543,7 +543,6 @@
       <zorder>label_dynamic_status</zorder>
       <zorder>label_picture</zorder>
       <zorder>label_static_name</zorder>
-      <zorder>backgroundpic</zorder>
      </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
@@ -737,7 +736,7 @@
         <x>0</x>
         <y>0</y>
         <width>1181</width>
-        <height>611</height>
+        <height>721</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -2194,7 +2193,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>660</y>
+      <y>670</y>
       <width>121</width>
       <height>27</height>
      </rect>

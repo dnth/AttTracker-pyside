@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Wed Dec  9 19:26:19 2015
+# Created: Tue Dec 29 00:21:32 2015
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -336,7 +336,7 @@ class Ui_LWCAttendanceTaker(object):
         self.label_dynamic_event.setObjectName("label_dynamic_event")
         self.formLayout_2.setWidget(2, QtGui.QFormLayout.FieldRole, self.label_dynamic_event)
         self.backgroundpic = QtGui.QLabel(self.tab_attendance)
-        self.backgroundpic.setGeometry(QtCore.QRect(0, 0, 1181, 611))
+        self.backgroundpic.setGeometry(QtCore.QRect(0, 0, 1181, 721))
         self.backgroundpic.setStyleSheet("")
         self.backgroundpic.setText("")
         self.backgroundpic.setPixmap(QtGui.QPixmap("icon/1280x720.jpg"))
@@ -1138,7 +1138,7 @@ class Ui_LWCAttendanceTaker(object):
         icon3.addPixmap(QtGui.QPixmap("icon/admin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.tab_widget_overall.addTab(self.tab_admin, icon3, "")
         self.pushButton_quit = QtGui.QPushButton(self.centralwidget)
-        self.pushButton_quit.setGeometry(QtCore.QRect(10, 660, 121, 27))
+        self.pushButton_quit.setGeometry(QtCore.QRect(10, 670, 121, 27))
         font = QtGui.QFont()
         font.setPointSize(11)
         font.setWeight(50)
