@@ -93,7 +93,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.home()
         
         # show maximized
-        self.showMaximized()
+#         self.showMaximized()
+        self.showFullScreen()
 
         if not isAdmin:
             print "Logged in as lwcuser"
