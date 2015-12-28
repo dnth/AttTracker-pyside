@@ -1134,7 +1134,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.mpl_memberscount.canvas.ax.set_xlabel("Department")
         self.mpl_memberscount.canvas.ax.set_ylabel("Number of members")
         self.mpl_memberscount.canvas.ax.set_ylim([0,40])
-        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution, Total Active Members:%d" % total_active_members)
+        self.mpl_memberscount.canvas.ax.set_title("LWC Active Members Distribution")
+        self.mpl_memberscount.canvas.ax.text(10.55,35.95,"Total Active Members: %d" % total_active_members, ha="center", va="center", size="large",color="blue")
         self.mpl_memberscount.canvas.ax.grid(True)
         # label values on graph
         for rect in rects:
