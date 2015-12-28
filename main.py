@@ -93,7 +93,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.home()
         
         # show maximized
-#         self.showMaximized()
         self.showFullScreen()
 
         if not isAdmin:
@@ -107,7 +106,6 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
         self.statusbar.showMessage("Connect to the RFID reader and database to start")
         
-#         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
         self.pushButton_quit.clicked.connect(self.close_application)
         self.pushButton_connect.clicked.connect(self.connect_serial_port)
         self.pushButton_refresh.clicked.connect(self.load_serial_port_2)
@@ -198,16 +196,12 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         # Check If there is connection
         if self.arduino.isOpen():
             print "Connected to", str(self.comboBox_serialPort.currentText())
-#             self.timer = core.QTimer(self)
-#             self.timer.timeout.connect(self.v2_scan_id)
-#             self.timer.start(300)
             self.pushButton_connect.setStyleSheet("background-color: lightgreen")
             self.pushButton_connect.setText("Connected!")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             self.statusBar().showMessage("Connected to %s" % str(self.comboBox_serialPort.currentText()))
             self.pushButton_disconnect.setEnabled(True)
             
-#             self.connectDB()
 
 
 ####################################################################################################################################################    
@@ -1234,6 +1228,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+                        # experimental: to avoid duplicate reading of rfid in short time
+                        time.sleep(1)
     
                     else:
                         print "Record exists for:"
