@@ -1208,7 +1208,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.label_dynamic_dept.setText(member_data[0][4])
                 
                 if os.path.exists("pics/%s.jpg" % member_data[0][2].encode('utf-8')):
-                    self.label_picture.setPixmap(QtGui.QPixmap("pics/%s.jpg" % member_data[0][2]).scaledToHeight(200) )
+                    self.label_picture.setPixmap(QtGui.QPixmap("pics/%s.jpg" % member_data[0][2]))
 
                 else:
                     self.label_picture.setPixmap(QtGui.QPixmap("icon/unknown_profile.png" ).scaledToHeight(160))
