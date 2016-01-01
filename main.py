@@ -1219,37 +1219,37 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
                 self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                 
-                if t.time()-t_0 < 1.5:
+                if t.time()-t_0 < 0.5:
                     print "Oops double scan there!" # double scan detected, do not proceed to enter data
                 
-                if self.event_id is not None:
-                    cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
-                    if cur.fetchall() == ():
-                        cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
-                        db.commit()
-                        print "*****Recorded!*****"
-                        print "Member:", member_data[0][2].encode('utf-8')
-                        print "Event:", self.event_type, self.event_date 
-                        self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
-                        self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
-                        self.statusbar.clearMessage()
-                        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
-                        # experimental: to avoid duplicate reading of rfid in short time
-                        
-    
+                    if self.event_id is not None:
+                        cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
+                        if cur.fetchall() == ():
+                            cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
+                            db.commit()
+                            print "*****Recorded!*****"
+                            print "Member:", member_data[0][2].encode('utf-8')
+                            print "Event:", self.event_type, self.event_date 
+                            self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
+                            self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
+                            self.statusbar.clearMessage()
+                            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+                            # experimental: to avoid duplicate reading of rfid in short time
+                            
+        
+                        else:
+                            print "Record exists for:"
+                            print "Member:", member_data[0][2].encode('utf-8')
+                            print "Event:", self.event_type, self.event_date
+                            self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
+                            self.label_dynamic_status.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
+                            self.statusbar.clearMessage()
+                            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                     else:
-                        print "Record exists for:"
-                        print "Member:", member_data[0][2].encode('utf-8')
-                        print "Event:", self.event_type, self.event_date
-                        self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
-                        self.label_dynamic_status.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
+                        self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
+                        self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
-                else:
-                    self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
-                    self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
-                    self.statusbar.clearMessage()
-                    self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
 
             else:
                 print "Sorry no match in database!"
