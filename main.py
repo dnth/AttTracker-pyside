@@ -1192,6 +1192,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             
             if member_data:
 #                 print "Success"
+                t_0 = t.time()
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
                 
@@ -1218,6 +1219,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                 
                 if self.event_id is not None:
+                    
+                    print t.time() - t_0
                     cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
                     if cur.fetchall() == ():
                         cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
@@ -1230,7 +1233,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
                         # experimental: to avoid duplicate reading of rfid in short time
-                        time.sleep(1)
+                        
     
                     else:
                         print "Record exists for:"
