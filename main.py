@@ -1192,7 +1192,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             
             if member_data:
 #                 print "Success"
-                t_0 = t.time()
+
+                t_0 = t.time() # take time for first scan
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
                 
@@ -1218,9 +1219,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
                 self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                 
+                if t.time()-t_0 < 1.5:
+                    print "Oops double scan there!" # double scan detected, do not proceed to enter data
+                
                 if self.event_id is not None:
-                    
-                    print t.time() - t_0
                     cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
                     if cur.fetchall() == ():
                         cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
