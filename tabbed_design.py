@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Tue Dec 29 00:21:32 2015
+# Created: Sat Jan  2 00:33:30 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -336,10 +336,10 @@ class Ui_LWCAttendanceTaker(object):
         self.label_dynamic_event.setObjectName("label_dynamic_event")
         self.formLayout_2.setWidget(2, QtGui.QFormLayout.FieldRole, self.label_dynamic_event)
         self.backgroundpic = QtGui.QLabel(self.tab_attendance)
-        self.backgroundpic.setGeometry(QtCore.QRect(0, 0, 1181, 721))
+        self.backgroundpic.setGeometry(QtCore.QRect(-90, 0, 1301, 721))
         self.backgroundpic.setStyleSheet("")
         self.backgroundpic.setText("")
-        self.backgroundpic.setPixmap(QtGui.QPixmap("icon/1280x720.jpg"))
+        self.backgroundpic.setPixmap(QtGui.QPixmap("icon/1920X1280-chi.jpg"))
         self.backgroundpic.setObjectName("backgroundpic")
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("icon/Workers.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)

@@ -733,9 +733,9 @@
      <widget class="QLabel" name="backgroundpic">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>-90</x>
         <y>0</y>
-        <width>1181</width>
+        <width>1301</width>
         <height>721</height>
        </rect>
       </property>
@@ -746,7 +746,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>icon/1280x720.jpg</pixmap>
+       <pixmap>icon/1920X1280-chi.jpg</pixmap>
       </property>
      </widget>
      <zorder>backgroundpic</zorder>
