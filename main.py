@@ -20,6 +20,9 @@ from datetime import date, time
 from time import strftime
 import time as t
 
+
+last_scan = t.time()
+
 print "Start Time:",datetime.datetime.now()
 
 isAdmin = False
@@ -1169,7 +1172,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.label_dynamic_dept.setText("")
         self.label_dynamic_status.setText("")
     
-    def v2_scan_id(self):
+    def v2_scan_id(self): 
+        global last_scan
         db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
         cur = db.cursor()
         
@@ -1182,7 +1186,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.pushButton_connect.setStyleSheet("background-color: red")
             self.pushButton_connect.setText("Connect")
         
-        if len(self.data) > 11:
+        if len(self.data) > 11 and t.time()-last_scan > 2:
+            print "time diff:",t.time()-last_scan
             print "ID detected"
             read_id = self.data[:12]
             print "Detected ID:",read_id
@@ -1193,7 +1198,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             if member_data:
 #                 print "Success"
 
-                t_0 = t.time() # take time for first scan
+                
                 self.clear_members_dynamic_fields()
                 member_id = member_data[0][0] 
                 
@@ -1219,37 +1224,37 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
                 self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
                 
-                if t.time()-t_0 < 0.5:
-                    print "Oops double scan there!" # double scan detected, do not proceed to enter data
                 
-                    if self.event_id is not None:
-                        cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
-                        if cur.fetchall() == ():
-                            cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
-                            db.commit()
-                            print "*****Recorded!*****"
-                            print "Member:", member_data[0][2].encode('utf-8')
-                            print "Event:", self.event_type, self.event_date 
-                            self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
-                            self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
-                            self.statusbar.clearMessage()
-                            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
-                            # experimental: to avoid duplicate reading of rfid in short time
-                            
-        
-                        else:
-                            print "Record exists for:"
-                            print "Member:", member_data[0][2].encode('utf-8')
-                            print "Event:", self.event_type, self.event_date
-                            self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
-                            self.label_dynamic_status.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
-                            self.statusbar.clearMessage()
-                            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
-                    else:
-                        self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
-                        self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
+                if self.event_id is not None:
+                    cur.execute("SELECT * FROM new_attendance_table WHERE member_id='%d' AND event_id='%d' " % ( int(member_id), int(self.event_id) ) )
+                    if cur.fetchall() == ():
+                        cur.execute("INSERT INTO new_attendance_table VALUES (NULL, '%d', '%d', 'P', '%s' )" % ( int(member_id), int(self.event_id), datetime.datetime.now()))
+                        db.commit()
+                        print "*****Recorded!*****"
+                        print "Member:", member_data[0][2].encode('utf-8')
+                        print "Event:", self.event_type, self.event_date 
+                        self.label_dynamic_status.setText("Done! Congratulations for attending %s!" % self.event_type)
+                        self.label_dynamic_status.setStyleSheet("color: green; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
                         self.statusbar.clearMessage()
                         self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+                        last_scan = t.time()
+                        
+    
+                    else:
+                        print "Record exists for:"
+                        print "Member:", member_data[0][2].encode('utf-8')
+                        print "Event:", self.event_type, self.event_date
+                        self.label_dynamic_status.setText("Duplicate entry. Your attendance was taken earlier.")
+                        self.label_dynamic_status.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0);font-weight:bold;")
+                        self.statusbar.clearMessage()
+                        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+                        last_scan = t.time()
+                else:
+                    self.label_dynamic_status.setText("There's no event at the moment. Good job for coming to church!")
+                    self.label_dynamic_status.setStyleSheet("color: black; background-color: rgba(255, 255, 255, 0)")
+                    self.statusbar.clearMessage()
+                    self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+                    last_scan = t.time()
 
             else:
                 print "Sorry no match in database!"
@@ -1262,8 +1267,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.label_dynamic_engname.clear()
                 self.statusbar.clearMessage()
                 self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+                last_scan = t.time()
                 
-        
+            
 def main():
 
     app = QtGui.QApplication(sys.argv)  # A new instance of QApplication
