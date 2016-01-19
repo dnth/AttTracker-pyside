@@ -20,6 +20,9 @@ from datetime import date, time
 from time import strftime
 import time as t
 
+from matplotlib import style
+style.use("fivethirtyeight")
+
 
 last_scan = t.time()
 
@@ -319,7 +322,11 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.comboBox_yearselector.addItems([str(i) for i in range(2015,2024)])
                  
                 # set default value of the month combo box to the current month 
-                index_month = self.comboBox_monthselector.findText(datetime.datetime.date(datetime.datetime.now()).strftime("%m"), QtCore.Qt.MatchFixedString)
+#                 index_month = self.comboBox_monthselector.findText(datetime.datetime.date(datetime.datetime.now()).strftime("%m"), QtCore.Qt.MatchFixedString)
+#                 print "Current month:", datetime.datetime.date(datetime.datetime.now()).strftime("%m")
+                now = datetime.datetime.now()
+                print "Current month:", now.month
+                index_month = self.comboBox_monthselector.findText(now.month, QtCore.Qt.MatchFixedString)
                 self.comboBox_monthselector.setCurrentIndex(index_month)
                   
                 index_year = self.comboBox_yearselector.findText(datetime.datetime.date(datetime.datetime.now()).strftime("%Y"), QtCore.Qt.MatchFixedString)
