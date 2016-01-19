@@ -323,13 +323,15 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                  
                 # set default value of the month combo box to the current month 
 #                 index_month = self.comboBox_monthselector.findText(datetime.datetime.date(datetime.datetime.now()).strftime("%m"), QtCore.Qt.MatchFixedString)
-#                 print "Current month:", datetime.datetime.date(datetime.datetime.now()).strftime("%m")
+                
                 now = datetime.datetime.now()
-                print "Current month:", now.month
-                index_month = self.comboBox_monthselector.findText(now.month, QtCore.Qt.MatchFixedString)
+                index_month = self.comboBox_monthselector.findText(str(now.month), QtCore.Qt.MatchFixedString)
+                print index_month
+                
                 self.comboBox_monthselector.setCurrentIndex(index_month)
                   
-                index_year = self.comboBox_yearselector.findText(datetime.datetime.date(datetime.datetime.now()).strftime("%Y"), QtCore.Qt.MatchFixedString)
+#                 index_year = self.comboBox_yearselector.findText(datetime.datetime.date(datetime.datetime.now()).strftime("%Y"), QtCore.Qt.MatchFixedString)
+                index_year = self.comboBox_yearselector.findText(str(now.year), QtCore.Qt.MatchFixedString)
                 self.comboBox_yearselector.setCurrentIndex(index_year)
                 
 #                 self.plot_all_service()
