@@ -288,22 +288,24 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         
     
     def connectDB(self):
-        self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
-        
-        # start the clock once the connect db has triggered
-        self.timer = QtCore.QTimer(self)
-        self.timer.timeout.connect(self.Time)
-        self.timer.timeout.connect(self.Date)
-        self.timer.timeout.connect(self.updateEventStatus)
-        self.timer.start(1000)
-        self.lcdNumber_time.setDigitCount(8)
-        self.lcdNumber_time.display(strftime("%H"+":"+"%M"+":"+"%S"))
-        self.label_dynamic_date.setText(strftime("%Y"+" "+"%B"+" "+"%d"+", "+"%A"))
-        
         try:
             db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
             
             if db.open:
+                
+                self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
+        
+                # start the clock once the connect db has triggered
+                self.timer = QtCore.QTimer(self)
+                self.timer.timeout.connect(self.Time)
+                self.timer.timeout.connect(self.Date)
+                self.timer.timeout.connect(self.updateEventStatus)
+                self.timer.start(1000)
+                self.lcdNumber_time.setDigitCount(8)
+                self.lcdNumber_time.display(strftime("%H"+":"+"%M"+":"+"%S"))
+                self.label_dynamic_date.setText(strftime("%Y"+" "+"%B"+" "+"%d"+", "+"%A"))
+                
+                
                 self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
                 self.statusbar.showMessage("System online!")
                 self.pushButton_dbconnect.setText("Connected to database at %s" % str(self.databaseHostLineEdit.text()))
@@ -342,6 +344,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.timer.start(300)
             
         except:
+            print "Cant connect to db"
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
             self.statusbar.showMessage("Database cannot be reached, please re-enter")
             self.pushButton_dbconnect.setText("Connection error")
@@ -784,94 +787,105 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.label_dynamic_date.setText(strftime("%Y"+" "+"%B"+" "+"%d"+", "+"%A"))
         
     def updateEventStatus(self):
-        db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
-        cur = db.cursor()
-        self.event_id = None
-        self.current_date = datetime.datetime.date(datetime.datetime.now())
-        self.current_time = datetime.datetime.time(datetime.datetime.now())
-#         self.current_date = date(2015,10,7)
-#         self.current_time = time(19,0,0)
-        if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
-            self.event_type = "Sunday Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Sunday Service")
-            self.label_welcome.setText("Welcome! wipe ID for Sunday Service Attendance!")
-        elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
-            self.event_type = "Wednesday Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Wednesday Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Wednesday Service Attendance!")
-        elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
-            self.event_type = "Friday Prayer Meeting"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Friday Prayer Meeting")
-            self.label_welcome.setText("Welcome! Swipe ID for Friday Prayer Attendance!")
-                        
-        elif self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Monday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome, Swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Tuesday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Thursday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
-        elif self.current_date.strftime("%A") == "Saturday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
-            self.event_type = "Dawn Service"
-            self.event_date = self.current_date
-            cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
-            self.event_id = str(cur.fetchall()[0][0])
-            self.label_dynamic_event.setText("Dawn Service")
-            self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+        try:
+            db = mdb.connect(charset='utf8', host=str(self.databaseHostLineEdit.text()), user="root", passwd="root", db="lwc_members")
+            cur = db.cursor()
+            if db.open:
+                self.event_id = None
+                self.current_date = datetime.datetime.date(datetime.datetime.now())
+                self.current_time = datetime.datetime.time(datetime.datetime.now())
+        #         self.current_date = date(2015,10,7)
+        #         self.current_time = time(19,0,0)
+                if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
+                    self.event_type = "Sunday Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Sunday Service")
+                    self.label_welcome.setText("Welcome! wipe ID for Sunday Service Attendance!")
+                elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
+                    self.event_type = "Wednesday Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Wednesday Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Wednesday Service Attendance!")
+                elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(18,0,0) and self.current_time <= time(22,30,0):
+                    self.event_type = "Friday Prayer Meeting"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Friday Prayer Meeting")
+                    self.label_welcome.setText("Welcome! Swipe ID for Friday Prayer Attendance!")
+                                
+                elif self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+                elif self.current_date.strftime("%A") == "Monday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome, Swipe ID for Dawn Service Attendance!")
+                elif self.current_date.strftime("%A") == "Tuesday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+                elif self.current_date.strftime("%A") == "Wednesday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+                elif self.current_date.strftime("%A") == "Thursday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+                elif self.current_date.strftime("%A") == "Friday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+                elif self.current_date.strftime("%A") == "Saturday" and self.current_time >= time(0,0,0) and self.current_time <= time(6,30,0):
+                    self.event_type = "Dawn Service"
+                    self.event_date = self.current_date
+                    cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
+                    self.event_id = str(cur.fetchall()[0][0])
+                    self.label_dynamic_event.setText("Dawn Service")
+                    self.label_welcome.setText("Welcome! Swipe ID for Dawn Service Attendance!")
+                
+                else:
+                    self.label_dynamic_event.setText("No event now =(")
+                    self.label_welcome.setText("Welcome! There's no event now")
+                    self.label_dynamic_event.setStyleSheet("font-size:11pt;background-color: rgba(255, 255, 255, 0)")
+                    
+                    
+                if self.event_id is not None:
+                    self.label_dynamic_event.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0)")
+                
+                
+        except:
+            print "Cant connect to db"
+            self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(255,0,0,255);color:black;font-weight:bold;}")
+            self.statusbar.showMessage("Database cannot be reached, please re-enter")
+            self.pushButton_dbconnect.setText("Connection error")
+            self.pushButton_dbconnect.setStyleSheet("background-color: red")
         
-        else:
-            self.label_dynamic_event.setText("No event now =(")
-            self.label_welcome.setText("Welcome! There's no event now")
-            self.label_dynamic_event.setStyleSheet("font-size:11pt;background-color: rgba(255, 255, 255, 0)")
             
-            
-        if self.event_id is not None:
-            self.label_dynamic_event.setStyleSheet("color: red; background-color: rgba(255, 255, 255, 0)")
-        
             
     
 ####################################################################################################################################################            
