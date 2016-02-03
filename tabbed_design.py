@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'tabbed.ui'
 #
-# Created: Sat Jan  2 00:33:30 2016
+# Created: Wed Feb  3 23:46:02 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -773,6 +773,22 @@ class Ui_LWCAttendanceTaker(object):
         self.label_totalbroadcast.setText("")
         self.label_totalbroadcast.setObjectName("label_totalbroadcast")
         self.gridLayout_3.addWidget(self.label_totalbroadcast, 1, 1, 1, 1)
+        self.label_22 = QtGui.QLabel(self.groupBox_8)
+        self.label_22.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_22.setObjectName("label_22")
+        self.gridLayout_3.addWidget(self.label_22, 2, 0, 1, 1)
+        self.label_totalpresentmale = QtGui.QLabel(self.groupBox_8)
+        self.label_totalpresentmale.setText("")
+        self.label_totalpresentmale.setObjectName("label_totalpresentmale")
+        self.gridLayout_3.addWidget(self.label_totalpresentmale, 2, 1, 1, 1)
+        self.label_24 = QtGui.QLabel(self.groupBox_8)
+        self.label_24.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_24.setObjectName("label_24")
+        self.gridLayout_3.addWidget(self.label_24, 3, 0, 1, 1)
+        self.label_totalpresentfemale = QtGui.QLabel(self.groupBox_8)
+        self.label_totalpresentfemale.setText("")
+        self.label_totalpresentfemale.setObjectName("label_totalpresentfemale")
+        self.gridLayout_3.addWidget(self.label_totalpresentfemale, 3, 1, 1, 1)
         self.gridLayout_2.addLayout(self.gridLayout_3, 6, 1, 1, 1)
         self.horizontalLayout_11.addWidget(self.groupBox_8)
         self.tabWidget_adminmarking.addTab(self.tab_5, "")
@@ -1233,6 +1249,8 @@ class Ui_LWCAttendanceTaker(object):
         self.label_16.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Summary", None, QtGui.QApplication.UnicodeUTF8))
         self.label_21.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Total Broadcast:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_20.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Total Present:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_22.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Total male present:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_24.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Total female present:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab_5), QtGui.QApplication.translate("LWCAttendanceTaker", "Admin Marking", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget_adminmarking.setTabText(self.tabWidget_adminmarking.indexOf(self.tab), QtGui.QApplication.translate("LWCAttendanceTaker", "Members Count", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_commitchange.setText(QtGui.QApplication.translate("LWCAttendanceTaker", "Commit Changes", None, QtGui.QApplication.UnicodeUTF8))

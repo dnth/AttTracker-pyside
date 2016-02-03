@@ -763,6 +763,8 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             
             broadcast_count = 0
             present_count = 0
+            present_male_count = 0
+            present_female_count = 0
                 
             for rownumber, rowvalue in enumerate(attendees):
                 self.tableWidget_attendee.setItem(rownumber,0,QtGui.QTableWidgetItem("%s" %rowvalue[0]))
@@ -784,10 +786,22 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                     self.tableWidget_attendee.item(rownumber,1).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,2).setBackground(QtGui.QColor(153,255,153))
                     self.tableWidget_attendee.item(rownumber,3).setBackground(QtGui.QColor(153,255,153))
+                    
+#                     print rowvalue[0]
+                    
+                    cur.execute("SELECT gender from members_list WHERE chi_name='%s'" % rowvalue[0])
+                    gender = cur.fetchall()
+                    print gender
+                    if gender[0][0] == 'M':
+                        present_male_count+=1
+                    if gender[0][0] == 'F':
+                        present_female_count+=1
             
             # show summary in label
             self.label_totalbroadcast.setText(str(broadcast_count))
             self.label_totalpresent.setText(str(present_count))
+            self.label_totalpresentmale.setText(str(present_male_count))
+            self.label_totalpresentfemale.setText(str(present_female_count))
             self.statusbar.showMessage("Attendees loaded")
             self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,255,0,255);color:black;font-weight:bold;}")
             
