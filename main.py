@@ -29,6 +29,8 @@ last_scan = t.time()
 print "Start Time:",datetime.datetime.now()
 
 isAdmin = False
+isRemote = False
+isUser = False
 
 class Login(QtGui.QDialog, login_window.Ui_Dialog):
     def __init__(self):
@@ -37,8 +39,8 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
         
-        self.lineEdit_username.setText("lwcadmin")
-        self.lineEdit_password.setText("lwcadmin")
+        self.lineEdit_username.setText("lwcremote")
+        self.lineEdit_password.setText("lwcremote")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
         self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
@@ -58,6 +60,13 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
             
         elif (self.lineEdit_username.text() == 'lwcuser' and self.lineEdit_password.text() == 'lwcuser'):
             self.accept()
+            global isUser
+            isUser = True
+        
+        elif (self.lineEdit_username.text() == 'lwcremote' and self.lineEdit_password.text() == 'lwcremote'):
+            self.accept()
+            global isRemote
+            isRemote = True
             
         else:
             QtGui.QMessageBox.warning(
@@ -98,14 +107,19 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.calendarWidget.setMaximumDate(datetime.datetime.now())
         self.home()
         
-        # show maximized
-        self.showFullScreen()
+        if isRemote == True:
+            print "Logged in as remote computer"  
+            
+        elif isAdmin == True:
+            print "Logged in as admin"
+            
 
-        if not isAdmin:
+        elif isUser == True:
             print "Logged in as lwcuser"
             self.tab_widget_overall.setTabEnabled(0, False)
             self.tab_widget_overall.setTabEnabled(2, False)
             self.tab_widget_overall.setTabEnabled(3, False)
+            self.showFullScreen()
         
         
     def home(self):                        
@@ -173,8 +187,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.pushButton_addnewevent.clicked.connect(self.addevents)
         
         # Enable this line for reader pc. This line simulates a user click on these buttons
-        self.pushButton_connect.click()
-        self.pushButton_connecttohome.click()
+        if isAdmin == True or isUser == True:
+            self.pushButton_connect.click()
+            self.pushButton_connecttohome.click()
         
         # default check for attendance radio button
         self.radioButton_present.setChecked(True)
@@ -328,7 +343,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 
                 now = datetime.datetime.now()
                 index_month = self.comboBox_monthselector.findText(str(now.month), QtCore.Qt.MatchFixedString)
-                print index_month
+#                 print index_month
                 
                 self.comboBox_monthselector.setCurrentIndex(index_month)
                   
@@ -339,9 +354,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 #                 self.plot_all_service()
                 self.plot_dept_stats()
                 
-                self.timer = QtCore.QTimer(self)
-                self.timer.timeout.connect(self.v2_scan_id)
-                self.timer.start(300)
+                if isRemote == False:
+                    self.timer = QtCore.QTimer(self)
+                    self.timer.timeout.connect(self.v2_scan_id)
+                    self.timer.start(300)
             
         except:
             print "Cant connect to db"
