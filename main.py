@@ -191,6 +191,9 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
             self.pushButton_connect.click()
             self.pushButton_connecttohome.click()
         
+        if isRemote == True:
+            self.pushButton_connect.setDisabled(True)
+        
         # default check for attendance radio button
         self.radioButton_present.setChecked(True)
         
