@@ -829,7 +829,7 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
                 self.current_time = datetime.datetime.time(datetime.datetime.now())
         #         self.current_date = date(2015,10,7)
         #         self.current_time = time(19,0,0)
-                if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(13,00,0):
+                if self.current_date.strftime("%A") == "Sunday" and self.current_time >= time(7,0,0) and self.current_time <= time(15,00,0):
                     self.event_type = "Sunday Service"
                     self.event_date = self.current_date
                     cur.execute("SELECT * FROM event_test WHERE event_type='%s' AND event_date='%s' " % (self.event_type, self.event_date) )
