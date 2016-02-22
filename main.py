@@ -39,8 +39,8 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
         
-        self.lineEdit_username.setText("lwcremote")
-        self.lineEdit_password.setText("lwcremote")
+        self.lineEdit_username.setText("lwcadmin")
+        self.lineEdit_password.setText("lwcadmin")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
         self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
@@ -1314,12 +1314,13 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
 
             else:
                 print "Sorry no match in database!"
+                self.label_dynamic_rfid.setText(read_id)
                 self.label_dynamic_status.setText("Sorry no match in database! Please get help from LWC admin")
                 self.label_dynamic_status.setStyleSheet("color: blue; background-color: rgba(255, 255, 255, 0)")
                 self.label_picture.clear()
                 self.label_dynamic_name.clear()
                 self.label_dynamic_dept.clear()
-                self.label_dynamic_rfid.clear()
+#                 self.label_dynamic_rfid.clear()
                 self.label_dynamic_engname.clear()
                 self.statusbar.clearMessage()
                 self.statusbar.setStyleSheet("QStatusBar{padding-left:8px;background:rgba(0,0,0,0);color:black;font-weight:bold;}")
