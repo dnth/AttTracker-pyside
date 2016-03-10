@@ -39,8 +39,8 @@ class Login(QtGui.QDialog, login_window.Ui_Dialog):
         self.setupUi(self)
         self.pushButton_login.clicked.connect(self.handleLogin)
         
-        self.lineEdit_username.setText("lwcadmin")
-        self.lineEdit_password.setText("lwcadmin")
+        self.lineEdit_username.setText("lwcremote")
+        self.lineEdit_password.setText("lwcremote")
         
         self.setWindowIcon(QtGui.QIcon("icon/disp_icon.png"))
         self.loginlogo.setPixmap(QtGui.QPixmap("icon/disp_icon.png" ).scaledToHeight(100))
@@ -108,7 +108,10 @@ class AttTracker(QtGui.QMainWindow, tabbed_design.Ui_LWCAttendanceTaker):
         self.home()
         
         if isRemote == True:
-            print "Logged in as remote computer"  
+            print "Logged in as remote computer"
+            self.databaseHostLineEdit.setText("192.168.0.9")
+            
+            
             
         elif isAdmin == True:
             print "Logged in as admin"
